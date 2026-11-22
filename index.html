@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ne'hub x The Core | Mui Ne</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{'forest-green':'#122419','forest-light':'#1b3a2a','vintage-gold':'#d4af37','deep-brown':'#1e140d','warm-amber':'#ffb84d'},
+fontFamily:{playfair:['"Playfair Display"','serif'],inter:['Inter','sans-serif'],montserrat:['Montserrat','sans-serif']}}}}
+</script>
+<style>
+body{background:#000;color:#fff;overflow-x:hidden}
+.panel{transition:width .8s cubic-bezier(.65,0,.35,1),height .8s cubic-bezier(.65,0,.35,1),opacity .5s ease}
+.frosted{background:rgba(20,20,20,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.nehub-bg{background:url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop') center/cover #111}
+.alley-bg{background-color:#0a0a0a;background-image:radial-gradient(circle at 50% 30%,rgba(255,184,77,.15),transparent 60%),url('IMG_1794496966764_1794570707145.jpg');background-size:cover;background-position:center;background-blend-mode:overlay}
+.flicker{width:150px;height:150px;background:radial-gradient(circle,rgba(255,184,77,.8),rgba(255,184,77,0) 70%);border-radius:50%;position:absolute;top:20%;left:50%;transform:translateX(-50%);animation:flicker 4s infinite alternate;pointer-events:none}
+@keyframes flicker{0%,18%,22%,25%,53%,57%,100%{opacity:1;transform:translateX(-50%) scale(1)}20%,24%,55%{opacity:.6;transform:translateX(-50%) scale(.95)}}
+
+/* ===== Turntable ===== */
+.deck{position:relative;width:min(78vw,520px);aspect-ratio:1;margin-inline:auto}
+.deck::before{content:"";position:absolute;inset:-14%;background:radial-gradient(circle,rgba(255,184,77,.22),transparent 65%);pointer-events:none}
+.record{position:absolute;inset:0;border-radius:50%;
+ background:conic-gradient(from 20deg,transparent 0,rgba(255,255,255,.16) 8%,transparent 22%,transparent 50%,rgba(255,255,255,.16) 58%,transparent 72%),
+ repeating-radial-gradient(circle at center,#0c0c0c 0 2px,#171717 3px 4px);
+ box-shadow:0 0 0 6px #050505,0 30px 60px rgba(0,0,0,.7),inset 0 0 40px rgba(0,0,0,.8);
+ animation:spin 6s linear infinite;animation-play-state:paused}
+.deck.playing .record{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+.label{position:absolute;inset:32%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a5a3e,#122419 70%);border:2px solid rgba(212,175,55,.6);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.label img{width:78%;height:78%;object-fit:contain}
+.label .mono{font:600 clamp(.7rem,2.4vw,1.1rem)/1.1 'Playfair Display',serif;color:#d4af37;text-align:center;letter-spacing:.12em}
+.spindle{position:absolute;left:50%;top:50%;width:3.5%;aspect-ratio:1;transform:translate(-50%,-50%);background:#e8e2d0;border-radius:50%;z-index:2;box-shadow:0 0 0 3px #0c0c0c}
+.arm{position:absolute;right:-3%;top:4%;width:52%;height:2.2%;min-height:5px;transform-origin:96% 50%;transform:rotate(-3deg);transition:transform 1.2s cubic-bezier(.65,0,.35,1);z-index:3;pointer-events:none}
+.deck.playing .arm{transform:rotate(-20deg)}
+.arm i{position:absolute;inset:0;background:linear-gradient(#e8e2d0,#8b8472);border-radius:99px;box-shadow:0 6px 10px rgba(0,0,0,.6)}
+.arm b{position:absolute;left:-2%;top:-90%;width:9%;height:280%;background:#222;border:1px solid #d4af37;border-radius:3px}
+.arm s{position:absolute;right:-3%;top:50%;width:11%;aspect-ratio:1;transform:translateY(-50%);background:radial-gradient(#e8e2d0,#555);border-radius:50%;box-shadow:0 0 0 4px #0c0c0c}
+.eq{display:inline-flex;gap:3px;align-items:flex-end;height:14px}
+.eq span{width:3px;height:30%;background:currentColor;animation:eq 1s ease-in-out infinite;animation-play-state:paused}
+.deck.playing~* .eq span,.on .eq span{animation-play-state:running}
+.eq span:nth-child(2){animation-delay:.25s}.eq span:nth-child(3){animation-delay:.5s}
+@keyframes eq{50%{height:100%}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+:focus-visible{outline:2px solid #d4af37;outline-offset:3px}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#122419}::-webkit-scrollbar-thumb{background:#d4af37;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+.bk{display:block;width:100%;margin-top:.4rem;background:transparent;border:0;border-bottom:1px solid rgba(212,175,55,.4);padding:.7rem 0;color:#fff;font:400 1rem Inter,sans-serif;color-scheme:dark;border-radius:0;outline:0;transition:border-color .3s}.bk:focus{border-color:#d4af37}.blob{position:absolute;width:38vmax;height:38vmax;border-radius:50%;filter:blur(90px);opacity:.22;animation:drift 18s ease-in-out infinite alternate;pointer-events:none}
+.blob.b2{animation-duration:23s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(8vmax,5vmax) scale(1.15)}}
+.hint-arrow{animation:nudge 2.2s ease-in-out infinite;transform:rotate(90deg)}
+@media(min-width:768px){.hint-arrow{transform:none}}
+@keyframes nudge{50%{margin-left:6px}}
+.door{--dh:clamp(140px,25dvh,230px);position:relative;display:block;height:var(--dh);aspect-ratio:3/5;flex:none}
+@media(min-width:768px){.door{--dh:min(46dvh,400px)}}
+.door-body{position:absolute;inset:0;display:block;border-radius:50% 50% 4px 4px/22% 22% 4px 4px;background:linear-gradient(160deg,#2c1b10,#140c07);box-shadow:inset 0 0 0 3px rgba(212,175,55,.35),inset 0 0 0 10px #140c07,inset 0 0 0 11px rgba(212,175,55,.18),0 0 50px rgba(255,184,77,.22);overflow:hidden}
+.door-body::before{content:"";position:absolute;inset:22% 16% 8%;border:1px solid rgba(212,175,55,.2);border-radius:3px}
+.door-body::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%)}
+.slot{position:absolute;left:50%;top:15%;width:44%;height:8%;transform:translateX(-50%);background:radial-gradient(#ffb84d,#a8641c);border-radius:3px;overflow:hidden;box-shadow:0 0 14px rgba(255,184,77,.8);z-index:2}
+.shutter{position:absolute;inset:0;background:#140c07;transform-origin:top;animation:peek 7s ease-in-out infinite}
+@keyframes peek{0%,76%,100%{transform:scaleY(1)}82%,94%{transform:scaleY(0)}}
+.group:hover .shutter{animation:none;transform:scaleY(0);transition:transform .4s}
+.knob{position:absolute;right:13%;top:60%;width:7%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc8a,#8c6d1c);box-shadow:0 0 8px rgba(212,175,55,.7);z-index:2}
+.spill{position:absolute;left:50%;bottom:-3%;width:150%;height:14%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(255,184,77,.55),transparent 70%);filter:blur(6px)}
+.neon{text-shadow:0 0 6px rgba(212,175,55,.7),0 0 22px rgba(255,184,77,.45);animation:neon 5s infinite}
+@keyframes neon{0%,19%,21%,60%,62%,100%{opacity:1}20%,61%{opacity:.55}}
+</style>
+</head>
+<body class="overflow-hidden selection:bg-vintage-gold selection:text-forest-green">
+
+<!-- SPLIT SCREEN: CỔNG -->
+<div id="split" class="flex flex-col md:flex-row w-full h-screen h-[100dvh] fixed inset-0 z-50">
+  <button type="button" data-lang aria-label="Tiếng Việt / English" class="absolute top-4 right-4 z-30 font-inter text-xs text-gray-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 hover:border-vintage-gold backdrop-blur-md transition"><span data-l="vi">VI</span> / <span data-l="en">EN</span></button>
+
+  <div id="nehub" class="panel w-full h-[58%] md:h-full md:w-[70%] nehub-bg relative overflow-hidden flex items-center justify-center">
+    <div class="absolute inset-0 frosted"></div>
+    <i class="blob" style="left:8%;top:12%;background:#7aa58a"></i>
+    <i class="blob b2" style="right:6%;bottom:8%;background:#d9c28a"></i>
+    <div class="relative z-10 px-8 max-w-2xl text-center">
+      <p class="font-montserrat font-light text-gray-100 lowercase leading-relaxed text-balance text-xl sm:text-2xl md:text-4xl">
+        “beautiful things come late in life,
+        <span class="block mt-3 md:mt-4">thanks for waiting for us…</span>
+        <span class="block mt-3 md:mt-4 text-white font-medium text-lg sm:text-xl md:text-3xl">see you soon.”</span>
+      </p>
+      <p class="mt-8 md:mt-12 text-[11px] md:text-xs tracking-[.4em] uppercase font-montserrat text-gray-300">ne'hub co-working space</p>
+    </div>
+    <p class="absolute bottom-5 md:bottom-8 inset-x-0 text-center px-6 font-inter font-light text-xs md:text-sm text-gray-300/80 flex items-center justify-center gap-2">
+      <span data-t>Bên cạnh ne'hub có một cánh cửa khác.</span>
+      <svg class="w-4 h-4 text-vintage-gold hint-arrow shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+    </p>
+  </div>
+
+  <button id="core" type="button" aria-label="Gõ cửa để vào The Core" class="panel w-full h-[42%] md:h-full md:w-[30%] alley-bg relative group flex items-center justify-center overflow-hidden border-t md:border-t-0 md:border-l border-vintage-gold/20">
+    <span class="absolute inset-0 bg-black/55 transition duration-500 group-hover:bg-black/35"></span>
+    <span class="flicker"></span>
+    <span id="enter" class="relative z-10 flex md:flex-col items-center gap-6 md:gap-8 px-6 transition duration-500">
+      <span class="door">
+        <span class="spill"></span>
+        <span class="door-body">
+          <span class="slot"><span class="shutter"></span></span>
+          <span class="knob"></span>
+        </span>
+      </span>
+      <span class="text-left md:text-center">
+        <span class="neon block font-playfair text-vintage-gold text-3xl md:text-4xl tracking-[.18em]">THE CORE</span>
+        <span class="block font-playfair italic text-gray-300 text-sm md:text-base mt-1">Speakeasy Bar</span>
+        <span class="block font-inter font-light text-xs text-gray-400 mt-3" data-t>Cho những ai có duyên…</span>
+        <span class="mt-4 inline-flex items-center gap-2 text-warm-amber text-xs md:text-sm tracking-widest font-inter border border-warm-amber/50 group-hover:bg-warm-amber group-hover:text-forest-green transition rounded-full px-5 py-2"><span data-t>Gõ cửa để vào</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></span>
+      </span>
+    </span>
+  </button>
+</div>
+
+
+<!-- FULL SITE -->
+<div id="site" class="hidden opacity-0 bg-forest-green min-h-screen transition-opacity duration-1000 w-full absolute top-0 left-0 z-40">
+  <nav class="fixed top-0 w-full z-[100] px-4 md:px-8 py-4 flex justify-between items-center bg-gradient-to-b from-black/85 to-transparent">
+    <button id="back" type="button" class="group flex items-center gap-2 text-gray-300 hover:text-vintage-gold transition font-inter text-xs md:text-sm tracking-widest bg-black/40 px-4 py-2 rounded-full border border-gray-700 hover:border-vintage-gold backdrop-blur-md">
+      <svg class="w-4 h-4 transition group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg><span data-t>Trở lại cổng</span></button>
+    <div class="flex items-center gap-2">
+      <button id="mute" type="button" class="flex items-center gap-2 font-inter text-xs md:text-sm text-gray-300 hover:text-vintage-gold bg-black/40 px-4 py-2 rounded-full border border-gray-700 hover:border-vintage-gold backdrop-blur-md transition">
+      <span class="eq text-vintage-gold"><span></span><span></span><span></span></span><span id="mute-t" class="hidden sm:inline">Tắt nhạc</span></button>
+      <button data-lang type="button" aria-label="Tiếng Việt / English" class="font-inter text-xs md:text-sm text-gray-400 bg-black/40 px-4 py-2 rounded-full border border-gray-700 hover:border-vintage-gold backdrop-blur-md transition"><span data-l="vi">VI</span> / <span data-l="en">EN</span></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center overflow-hidden border-b border-vintage-gold/10 px-6 pt-28 pb-16">
+    <div class="absolute inset-0 bg-[url('IMG_1794496966781_1794570707293.jpg')] bg-cover bg-center opacity-10 mix-blend-luminosity"></div>
+    <div class="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+      <div id="deck" class="deck playing" role="img" aria-label="Đĩa than đang quay với logo The Core">
+        <div class="record">
+          <div class="label"><img id="logo" src="logo.png" alt="Logo The Core" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'mono',innerHTML:'THE<br>CORE'}))"></div>
+        </div>
+        <div class="spindle"></div>
+        <div class="arm"><i></i><b></b><s></s></div>
+      </div>
+      <div class="text-center lg:text-left">
+        <p class="font-inter text-warm-amber tracking-[.4em] uppercase text-xs md:text-sm mb-5" data-t>Mũi Né, Việt Nam</p>
+        <h1 class="font-playfair text-vintage-gold leading-none text-6xl sm:text-7xl xl:text-8xl drop-shadow-2xl">The Core</h1>
+        <h2 class="font-playfair italic text-xl md:text-3xl text-gray-300 mt-4">Speakeasy Bar</h2>
+        <div class="w-20 h-px bg-vintage-gold/50 my-8 mx-auto lg:mx-0"></div>
+        <p class="font-inter font-light text-gray-400 leading-relaxed max-w-md mx-auto lg:mx-0 text-base md:text-lg text-balance">Analog Sound • Crafted Spirits • Unhurried Vibes</p>
+      </div>
+    </div>
+    <a href="#story" aria-label="Cuộn xuống" class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-vintage-gold/60">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg></a>
+  </section>
+
+  <!-- Story -->
+  <section id="story" class="py-24 md:py-32 bg-deep-brown">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-20 md:mb-28 reveal">
+        <h3 class="font-playfair text-4xl md:text-5xl text-vintage-gold mb-6 text-balance" data-t>Linh Hồn Của Thời Gian</h3>
+        <p class="font-inter font-light text-gray-400 leading-relaxed text-base md:text-lg text-balance" data-t>Bên dưới ánh đèn mờ ảo, mỗi đồ vật tại The Core đều là một chứng nhân tĩnh lặng. Một bộ sưu tập ký ức được sắp đặt cẩn thận, chờ đợi những ai tinh tế lắng nghe.</p>
+      </div>
+      <div id="story-list" class="space-y-20 md:space-y-28"></div>
+    </div>
+  </section>
+
+  <!-- Đặt chỗ -->
+  <section id="booking" class="py-24 md:py-28 bg-deep-brown border-t border-vintage-gold/10">
+    <div class="max-w-2xl mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <h3 class="font-playfair text-4xl md:text-5xl text-vintage-gold mb-4" data-t>Đặt Chỗ</h3>
+        <p class="font-inter font-light text-gray-400 leading-relaxed text-base md:text-lg text-balance" data-t>Để chúng mình chuẩn bị trước chỗ ngồi nha.</p>
+        <div class="w-24 h-px bg-vintage-gold/50 mx-auto mt-8"></div>
+      </div>
+      <form id="book" class="grid sm:grid-cols-3 gap-x-6 gap-y-8 reveal" novalidate>
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+        <label class="sm:col-span-3 block font-inter text-sm text-gray-400"><span data-t>Tên</span>
+          <input name="guest" type="text" required autocomplete="name" class="bk">
+        </label>
+        <label class="block font-inter text-sm text-gray-400"><span data-t>Số lượng người</span>
+          <input name="guests" type="number" min="1" max="30" inputmode="numeric" required class="bk">
+        </label>
+        <label class="block font-inter text-sm text-gray-400"><span data-t>Ngày</span>
+          <input name="date" type="date" required class="bk">
+        </label>
+        <label class="block font-inter text-sm text-gray-400"><span data-t>Giờ</span>
+          <input name="time" type="time" required class="bk">
+        </label>
+        <div class="sm:col-span-3 text-center pt-2">
+          <button type="submit" class="font-inter text-sm tracking-widest text-forest-green bg-vintage-gold hover:bg-warm-amber disabled:opacity-60 transition px-10 py-3 rounded-full" data-t>Gửi đặt chỗ</button>
+          <p id="book-st" role="status" aria-live="polite" class="font-inter text-sm text-gray-300 mt-5 min-h-[1.5rem]"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <section class="py-24 md:py-32 bg-forest-light border-t border-vintage-gold/10">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16 md:mb-20 reveal">
+        <h3 class="font-playfair text-4xl md:text-5xl text-vintage-gold mb-4" data-t>Thực Đơn</h3>
+        <p class="font-inter text-gray-400 uppercase tracking-widest text-xs md:text-sm" data-t>Chất xúc tác cho những câu chuyện</p>
+        <div class="w-24 h-px bg-vintage-gold/50 mx-auto mt-8"></div>
+      </div>
+      <div id="menu" class="md:columns-2 md:gap-20"></div>
+    </div>
+  </section>
+
+  <footer class="bg-forest-green py-12 text-center border-t border-white/5 px-6">
+    <h5 class="font-playfair text-vintage-gold text-2xl mb-2">The Core</h5>
+    <p class="font-inter text-gray-400 text-xs tracking-widest uppercase mb-6" data-t>Speakeasy Bar · Mũi Né</p>
+    <p class="font-inter text-gray-500 text-sm">&copy; 2026 The Core. For the ones who find us.</p>
+  </footer>
+</div>
+
+<!-- Nhạc: đặt file the-core-music.mp3 cạnh index.html. Không có file thì dùng tiếng đĩa than tổng hợp. -->
+<audio id="bgm" src="the-core-music.mp3" loop preload="auto"></audio>
+
+<script>
+const $=id=>document.getElementById(id);
+const split=$('split'),nehub=$('nehub'),core=$('core'),enter=$('enter'),site=$('site'),deck=$('deck'),bgm=$('bgm');
+
+/* ---------- Content ---------- */
+const story=[
+ ['IMG_1794496966726_1794570706798.jpg','Vintage White Vespa','Chiếc Vespa Trắng Cổ Điển','Nằm ẩn mình trong góc khuất, chiếc Vespa màu trắng kem ánh lên dưới ngọn đèn vàng hắt ra từ bức tường thô ráp. Nó không còn bon bon trên những cung đường đầy cát của Mũi Né, mà dừng chân tại đây như một biểu tượng của những chuyến đi không hẹn ngày về, của sự tự do và phóng khoáng thập niên cũ.'],
+ ['IMG_1794496966708_1794570706647.jpg','Classic Dial Phone','Cuộc Gọi Từ Quá Khứ','Dưới ngọn đèn chụp tỏa ánh sáng hổ phách, chiếc điện thoại quay số bằng nhựa đen bóng nằm lặng lẽ bên chai rượu rỗng. Không còn những tiếng chuông reo giật cục, nó giờ đây thu thập những tâm tư chưa nói, những lời thì thầm được gửi gắm vào không gian tĩnh lặng của quán.'],
+ ['IMG_1794496966610_1794570706029.jpg','Retro Record Player','Giai Điệu Khép Kín','Âm thanh mộc mạc phát ra từ chiếc loa Marshall lấp đầy khoảng không. Kế bên là đầu đĩa than và chiếc vỏ bìa đĩa sờn góc <i>“Music for the Cocktail Hour”</i> của Frankie Carle. Những tiếng lạo xạo của kim than hòa cùng tiếng lanh canh của đá lạnh trong ly tạo nên một bản nhạc nền hoài niệm không thể tìm thấy ở bất kỳ nơi nào khác.']
+];
+const renderStory=()=>$('story-list').innerHTML=story.map(([src,alt,h,p],i)=>`
+ <div class="grid md:grid-cols-2 gap-8 md:gap-20 items-center reveal">
+  <div class="relative group ${i%2?'':'md:order-2'}">
+   <div class="absolute -inset-2 bg-gradient-to-r from-vintage-gold to-transparent opacity-20 group-hover:opacity-40 blur transition duration-1000"></div>
+   <img src="${src}" alt="${alt}" loading="lazy" class="relative w-full aspect-[4/3] object-cover rounded-sm border border-white/5 grayscale-[20%] sepia-[10%] transition duration-700 group-hover:grayscale-0">
+  </div>
+  <div class="${i%2?'':'md:order-1'}">
+   <h4 class="font-playfair text-2xl md:text-3xl text-vintage-gold mb-4 text-balance">${lang==='en'?SEN[i][0]:h}</h4>
+   <p class="font-inter font-light text-gray-400 leading-relaxed text-[15px] md:text-base max-w-prose">${lang==='en'?SEN[i][1]:p}</p>
+  </div>
+ </div>`).join('');
+
+const menu=[
+ ['Spirit-Forward','Đậm đà • Đậm chất • Hương vị nồng nàn',[
+  ['God Father','','Scotch Whisky, Amaretto'],
+  ['Negroni','','Gin, Campari, Sweet Vermouth'],
+  ['Troya','','Scotch Whisky, Cointreau, Amaretto, Pink Grapefruit Liqueur, Lime Juice'],
+  ['Boulevardier','','Bourbon, Campari, Sweet Vermouth']]],
+ ['Citrus & Refreshing','Chua dịu • Tươi mát • Dễ uống',[
+  ['Whisky Sour','','Bourbon, Lime Juice, Sugar, Egg White, Angostura Bitters'],
+  ['Daiquiri','','White Rum, Lime Juice, Sugar'],
+  ['Salty Dog','','Vodka, Pink Grapefruit Liqueur, Salt Rim'],
+  ['Side Car','','Brandy, Cointreau, Lemon Juice'],
+  ['Margarita','','Tequila, Cointreau, Sugar, Lime Juice'],
+  ['White Lady','','Gin, Cointreau, Lemon Juice, Egg White'],
+  ['Leap Year','','Gin, Cointreau, Rosso, Lemon Juice'],
+  ["Devil's Age",'','Gin, Cointreau, Campari, Lemon Juice'],
+  ['Long Island','','Vodka, Tequila, White Rum, Gin, Cointreau, Lemon Juice, Sugar, Coca-Cola']]],
+ ['Classic Mixers','Pha chế đơn giản • Dễ thưởng thức',[
+  ['Gin Tonic',"Gordon's",'Gin, Tonic Water, Fresh Lime'],
+  ['Gin Tonic','Bombay','Gin, Tonic Water, Fresh Lime'],
+  ['Whiskey Coke',"Ballantine's",'Whisky, Coca-Cola'],
+  ['Whiskey Coke','Jim Beam','Bourbon, Coca-Cola'],
+  ['Whiskey Coke',"Jack Daniel's",'Tennessee Whiskey, Coca-Cola'],
+  ['Rum Coke','','White Rum, Coca-Cola, Fresh Lime Wedge'],
+  ['Vodka Soda / Tonic','','Absolut Vodka, Soda / Tonic Water, Lime'],
+  ['Jägerbomb','','Jägermeister Shot, Red Bull Energy'],
+  ['Tequila Sunrise','','Jose Cuervo Tequila, Orange Juice, Grenadine'],
+  ['Mojito','','White Rum, Lime Juice, Sugar, Mint, Soda']]],
+ ['House Spirits','Rượu nguyên chất • Serve kèm đá / Ly shot',[
+  ["Ballantine's Finest",'Ly · Chai','Scotch'],
+  ['Jim Beam','Ly · Chai','Bourbon'],
+  ["Jack Daniel's No.7",'Ly · Chai','Tennessee Whiskey'],
+  ['St Remy Brandy','Ly · Chai','Brandy'],
+  ['Bacardi Superior','Chai','White Rum'],
+  ['Bacardi Gold','Ly · Chai','Rum'],
+  ["Gordon's Dry Gin",'Chai','Gin'],
+  ['Bombay Sapphire','Chai','Gin'],
+  ['Jose Cuervo Especial','Ly · Chai','Tequila'],
+  ['Absolut Vodka','Ly · Chai','Vodka'],
+  ['Jägermeister','Ly · Chai','Herbal liqueur']]],
+ ['Beverages','Nước giải khát • Nước ép tươi • Bia ướp lạnh',[
+  ['Fresh Orange Juice','','Nước ép cam tươi vắt nguyên chất'],
+  ['Fresh Pineapple Juice','','Nước ép dứa tươi nhiệt đới'],
+  ['Fresh Limeade','','Nước chanh tươi pha truyền thống'],
+  ['Coca-Cola','',''],['Sprite','',''],['Red Bull','',''],['Soda / Tonic','',''],
+  ['Tiger Crystal','Silver','Ướp lạnh kèm lát chanh tươi'],
+  ['Corona Extra','','Ướp lạnh kèm lát chanh tươi']]],
+ ['Mocktails','Không cồn • Tươi mát • Dễ uống',[
+  ['Lemon Lime Bitter','','Lemon, Lime, Angostura Bitters, Sprite'],
+  ['Virgin Mojito','','Mint, Lime, Sugar, Club Soda'],
+  ['Pink Guava Mojito','','Pink Guava Cordial, Mint, Salt, Soda']]],
+ ['Finger Foods','Món nhắm nhẹ',[
+  ['Special Snack','','Snack đặc biệt chọn lọc theo ngày']]]
+];
+const renderMenu=()=>$('menu').innerHTML=menu.map(([t,s,it])=>`
+ <div class="reveal break-inside-avoid mb-14 md:mb-16">
+  <h4 class="font-playfair text-2xl text-white tracking-wide">${t}</h4>
+  <p class="font-inter font-light text-xs text-gray-400 mt-1 mb-5 pb-4 border-b border-vintage-gold/20">${T(s)}</p>
+  <div class="space-y-6">${it.map(([n,k,d])=>`
+   <div><div class="flex items-baseline gap-3 flex-wrap"><span class="font-playfair text-lg text-vintage-gold">${n}</span>${k?`<span class="font-inter text-xs italic text-gray-400">${T(k)}</span>`:''}</div>${d?`<p class="font-inter font-light text-sm text-gray-400 mt-1.5 leading-relaxed">${T(d)}</p>`:''}</div>`).join('')}</div>
+ </div>`).join('');
+
+/* ---------- Language VI / EN ---------- */
+const SEN=[
+ ['The Vintage White Vespa','Tucked away in a quiet corner, the cream-white Vespa glows under the golden lamp spilling off a rough wall. It no longer hums along the sandy roads of Mui Ne. It rests here as a symbol of trips with no return date, and of the free spirit of decades past.'],
+ ['A Call from the Past','Beneath a lampshade casting amber light, a glossy black rotary phone sits quietly beside an empty bottle. It no longer rings sharply. Instead it gathers unspoken thoughts and whispers, entrusted to the still air of the bar.'],
+ ['A Closed Melody','Rustic sound from a Marshall speaker fills the room. Beside it sit the turntable and a worn-cornered sleeve of <i>“Music for the Cocktail Hour”</i> by Frankie Carle. The crackle of the needle mixed with the clink of ice in a glass makes a nostalgic soundtrack you won\'t find anywhere else.']];
+const EN={
+ 'Trở lại cổng':'Back to gate',"Bên cạnh ne'hub có một cánh cửa khác.":"Next door to ne'hub, there's another door.",'Cho những ai có duyên…':'For those meant to be here…','Gõ cửa để vào':'Knock to enter','Mũi Né, Việt Nam':'Mui Ne, Vietnam','Speakeasy Bar · Mũi Né':'Speakeasy Bar · Mui Ne',
+ 'Linh Hồn Của Thời Gian':'The Soul of Time',
+ 'Bên dưới ánh đèn mờ ảo, mỗi đồ vật tại The Core đều là một chứng nhân tĩnh lặng. Một bộ sưu tập ký ức được sắp đặt cẩn thận, chờ đợi những ai tinh tế lắng nghe.':'Under the dim light, every object at The Core is a silent witness. A carefully arranged collection of memories, waiting for those who listen closely.',
+ 'Đặt Chỗ':'Book a Table','Để chúng mình chuẩn bị trước chỗ ngồi nha.':'Let us get your seat ready.',
+ 'Tên':'Name','Số lượng người':'Guests','Ngày':'Date','Giờ':'Time','Gửi đặt chỗ':'Send reservation',
+ 'Thực Đơn':'Menu','Chất xúc tác cho những câu chuyện':'The catalyst for good stories',
+ 'Đậm đà • Đậm chất • Hương vị nồng nàn':'Rich • Bold • Full-bodied',
+ 'Chua dịu • Tươi mát • Dễ uống':'Tart • Fresh • Easy drinking',
+ 'Pha chế đơn giản • Dễ thưởng thức':'Simple serves • Easy to enjoy',
+ 'Rượu nguyên chất • Serve kèm đá / Ly shot':'Neat spirits • Served on ice / as a shot',
+ 'Nước giải khát • Nước ép tươi • Bia ướp lạnh':'Soft drinks • Fresh juices • Cold beer',
+ 'Không cồn • Tươi mát • Dễ uống':'Alcohol-free • Fresh • Easy drinking','Món nhắm nhẹ':'Light bites',
+ 'Ly · Chai':'Glass · Bottle','Chai':'Bottle',
+ 'Nước ép cam tươi vắt nguyên chất':'Freshly squeezed orange juice','Nước ép dứa tươi nhiệt đới':'Fresh tropical pineapple juice',
+ 'Nước chanh tươi pha truyền thống':'Traditional fresh limeade','Ướp lạnh kèm lát chanh tươi':'Served chilled with a fresh lime slice',
+ 'Snack đặc biệt chọn lọc theo ngày':'Special snack, picked fresh daily',
+ 'Tắt nhạc':'Music off','Bật nhạc':'Music on','Đang gửi…':'Sending…',
+ 'Cảm ơn bạn! Tụi mình đã nhận thông tin và sẽ giữ chỗ cho bạn.':'Thank you! We have your details and will hold your table.',
+ 'Chưa gửi được. Bạn thử lại hoặc':"Couldn't send. Please try again or",'gửi qua email':'email us',' nhé.':'.'};
+let lang='vi';
+try{lang=localStorage.getItem('lang')==='en'?'en':'vi'}catch(_){}
+const T=s=>lang==='en'&&EN[s]||s;
+function applyLang(first){
+ document.documentElement.lang=lang;
+ document.querySelectorAll('[data-t]').forEach(el=>{if(el.dataset.vi===undefined)el.dataset.vi=el.innerHTML;el.innerHTML=T(el.dataset.vi)});
+ renderStory();renderMenu();
+ if(!first)document.querySelectorAll('#story-list .reveal,#menu .reveal').forEach(e=>e.classList.add('in'));
+ document.querySelectorAll('[data-lang] [data-l]').forEach(e=>e.classList.toggle('text-vintage-gold',e.dataset.l===lang));
+ ui();
+}
+document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=lang==='en'?'vi':'en';try{localStorage.setItem('lang',lang)}catch(_){}applyLang(false)});
+
+/* ---------- Music: mp3 nếu có, không thì noir-jazz swing tổng hợp ---------- */
+let ctx,synth,playing=false;
+const hz=n=>440*2**((n-69)/12);
+const CH=[ // [bass, hợp âm, quãng 3] Am9 | Dm7 | Bm7b5 | E7b9 | Am9 | F7 | Bm7b5 | E7b9
+ [45,[55,59,64,72],3],[50,[53,57,60,64],3],[47,[57,62,65,69],3],[52,[56,62,65,68],4],
+ [45,[55,59,64,72],3],[53,[57,63,67,69],4],[47,[57,62,65,69],3],[52,[56,62,65,68],4]];
+function startSynth(){
+ ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+ if(ctx.state==='suspended')ctx.resume();
+ const out=ctx.createGain();out.gain.value=.85;
+ const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=4800;lp.connect(ctx.destination);
+ const dl=ctx.createDelay();dl.delayTime.value=.24;
+ const fb=ctx.createGain();fb.gain.value=.25;
+ const dlp=ctx.createBiquadFilter();dlp.type='lowpass';dlp.frequency.value=2000;
+ out.connect(lp);out.connect(dl);dl.connect(dlp);dlp.connect(fb);fb.connect(dl);dlp.connect(lp);
+ const len=ctx.sampleRate*2,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
+ for(let i=0;i<len;i++)d[i]=Math.random()<.0007?(Math.random()*2-1):(Math.random()*2-1)*.006; // sạn đĩa than
+ const bed=ctx.createBufferSource();bed.buffer=buf;bed.loop=true;
+ const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1500;
+ bed.connect(hp).connect(out);bed.start();
+ const tone=(t,n,g,dur,type='sine')=>{
+  const o=ctx.createOscillator(),e=ctx.createGain();
+  o.type=type;o.frequency.value=hz(n);
+  e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(g,t+.006);e.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(e).connect(out);o.start(t);o.stop(t+dur+.05);};
+ const hit=(t,f,g,dur,q=1.2)=>{
+  const s=ctx.createBufferSource(),b=ctx.createBiquadFilter(),e=ctx.createGain();
+  s.buffer=buf;b.type='bandpass';b.frequency.value=f;b.Q.value=q;
+  e.gain.setValueAtTime(g,t);e.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  s.connect(b).connect(e).connect(out);s.start(t,Math.random());s.stop(t+dur+.02);};
+ const sd=60/128/2;let step=0,next=ctx.currentTime+.15;
+ const bar=(s,t)=>{
+  const bi=(s>>3)%8,c=CH[bi],nx=CH[(bi+1)%8],ls=s%8;
+  if(ls%2===0){ // bass đi bộ: gốc – quãng 3 – quãng 5 – nốt dẫn
+   const w=[c[0],c[0]+c[2],c[0]+7,nx[0]-1][ls/2];
+   tone(t,w,.24,.4,'triangle');tone(t,w,.12,.4);}
+  if([0,2,3,4,6,7].includes(ls))hit(t,7500,ls%2?.07:.11,.09,.8); // ride swing
+  if(ls===2||ls===6)hit(t,3500,.06,.05); // hi-hat chân + chổi
+  if(ls===0||ls===3||(ls===7&&Math.random()<.4)) // piano stab
+   c[1].forEach((n,i)=>{tone(t+i*.008,n,.045,.45);tone(t+i*.008,n+12,.01,.2,'triangle');});
+  if(s%2&&Math.random()<.22)tone(t,c[1][Math.floor(Math.random()*4)]+12,.032,.8); // chuông vibraphone
+ };
+ const sched=()=>{while(next<ctx.currentTime+.3){bar(step,next+(step%2?sd*.34:0));next+=sd;step++}};
+ sched();synth={out,bed,timer:setInterval(sched,70)};
+}
+function stopSynth(){if(!synth)return;clearInterval(synth.timer);synth.bed.stop();synth.out.disconnect();synth=null}
+async function play(){
+ try{await bgm.play()}catch(e){try{startSynth()}catch(_){}}
+ playing=true;ui();
+}
+function pause(){bgm.pause();stopSynth();playing=false;ui()}
+function ui(){
+ deck.classList.toggle('playing',playing);
+ $('mute').classList.toggle('on',playing);
+ $('mute-t').textContent=T(playing?'Tắt nhạc':'Bật nhạc');
+}
+$('mute').onclick=()=>playing?pause():play();
+
+/* ---------- Transitions ---------- */
+function knock(){try{
+ ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();
+ [0,.2,.4].forEach((d,i)=>{const t=ctx.currentTime+d+.02,o=ctx.createOscillator(),g=ctx.createGain();
+  o.frequency.setValueAtTime(i===2?150:130,t);o.frequency.exponentialRampToValueAtTime(55,t+.12);
+  g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+.16);
+  o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+.2)});
+}catch(_){}}
+function openCore(){core.disabled=true;
+ nehub.style.cssText='width:0;height:0;opacity:0';
+ core.style.width='100%';core.style.height='100%';
+ enter.classList.add('opacity-0');
+ knock();setTimeout(play,700);
+ setTimeout(()=>{
+  split.style.display='none';
+  document.body.classList.remove('overflow-hidden');
+  site.classList.remove('hidden');
+  window.scrollTo(0,0);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>site.classList.remove('opacity-0')));
+ },800);
+}
+function backToSplit(){
+ pause();
+ site.classList.add('opacity-0');
+ setTimeout(()=>{
+  site.classList.add('hidden');
+  document.body.classList.add('overflow-hidden');
+  split.style.display='flex';core.disabled=false;
+  void split.offsetWidth;
+  nehub.style.cssText='opacity:1';core.style.width='';core.style.height='';
+  enter.classList.remove('opacity-0');
+ },1000);
+}
+core.onclick=openCore;$('back').onclick=backToSplit;
+
+/* ---------- Đặt chỗ: gửi về nateaintchill@gmail.com qua FormSubmit ---------- */
+const MAIL='nateaintchill@gmail.com',bf=$('book'),bst=$('book-st');
+{const t=new Date();bf.elements.date.min=new Date(t-t.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+bf.addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(!bf.reportValidity())return;
+ const f=Object.fromEntries(new FormData(bf)),btn=bf.querySelector('button');
+ const sum=`${f.guest}, ${f.guests} người, ${f.date} lúc ${f.time}`;
+ btn.disabled=true;bst.textContent=T('Đang gửi…');
+ try{
+  const r=await fetch('https://formsubmit.co/ajax/'+MAIL,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+   body:JSON.stringify({'Tên':f.guest,'Số lượng người':f.guests,'Ngày':f.date,'Giờ':f.time,_honey:f._honey,_subject:'Đặt chỗ The Core: '+sum,_template:'table',_captcha:'false'})});
+  const j=await r.json();
+  if(!r.ok||j.success==='false'||j.success===false)throw 0;
+  bst.textContent=T('Cảm ơn bạn! Tụi mình đã nhận thông tin và sẽ giữ chỗ cho bạn.');bf.reset();
+ }catch(_){
+  bst.innerHTML=`${T('Chưa gửi được. Bạn thử lại hoặc')} <a class="text-vintage-gold underline" href="mailto:${MAIL}?subject=${encodeURIComponent('Đặt chỗ The Core')}&body=${encodeURIComponent(sum)}">${T('gửi qua email')}</a>${T(' nhé.')}`;
+ }
+ btn.disabled=false;
+});
+
+applyLang(true);
+/* ---------- Reveal on scroll ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
+
