@@ -72,7 +72,8 @@ body{background:#000;color:#fff;overflow-x:hidden}
 @keyframes neon{0%,19%,21%,60%,62%,100%{opacity:1}20%,61%{opacity:.55}}
 html.g3d #nehub,html.g3d #core{display:none!important}
 #split [data-lang],#split .g3d-top{top:max(1rem,env(safe-area-inset-top))}
-#s3d-ui{padding-top:calc(4.25rem + env(safe-area-inset-top,0px));padding-bottom:calc(2rem + env(safe-area-inset-bottom,0px))}
+#s3d-ui{padding-top:calc(4.25rem + env(safe-area-inset-top,0px));padding-bottom:calc(5rem + env(safe-area-inset-bottom,0px))}
+@media(min-width:768px){#s3d-ui{padding-bottom:calc(2rem + env(safe-area-inset-bottom,0px))}}
 #site nav{padding-top:max(1rem,env(safe-area-inset-top))}
 #site nav button{white-space:nowrap}
 @supports(height:100svh){html .min-h-screen{min-height:100svh}}
@@ -99,7 +100,7 @@ html.g3d #nehub,html.g3d #core{display:none!important}
       </p>
       <p class="mt-8 md:mt-12 text-[11px] md:text-xs tracking-[.4em] uppercase font-montserrat text-gray-300">ne'hub co-working space</p>
     </div>
-    <p class="absolute bottom-5 md:bottom-8 inset-x-0 text-center px-6 font-inter font-light text-xs md:text-sm text-gray-300/80 flex items-center justify-center gap-2">
+    <p class="absolute bottom-12 md:bottom-8 inset-x-0 text-center px-6 font-inter font-light text-xs md:text-sm text-gray-300/80 flex items-center justify-center gap-2">
       <span data-t>Bên cạnh ne'hub có một cánh cửa khác.</span>
       <svg class="w-4 h-4 text-vintage-gold hint-arrow shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
     </p>
@@ -558,7 +559,7 @@ const FONTQ=[];
 function mkSign(w,h,cw,ch,draw,basic){const c=document.createElement('canvas');c.width=cw;c.height=ch;const g=c.getContext('2d'),tx=new TH.CanvasTexture(c);
  const m=new TH.Mesh(new TH.PlaneGeometry(w,h),basic?new TH.MeshBasicMaterial({map:tx}):new TH.MeshStandardMaterial({map:tx,roughness:.8}));
  const dr=()=>{g.clearRect(0,0,cw,ch);draw(g,cw,ch);tx.needsUpdate=true};dr();FONTQ.push(dr);scene.add(m);return m}
-try{Promise.all([document.fonts.load('600 54px "Playfair Display"'),document.fonts.load('400 19px Montserrat'),document.fonts.load('300 30px Montserrat'),document.fonts.load('italic 400 20px "Playfair Display"')]).catch(()=>{}).then(()=>FONTQ.forEach(f=>f()))}catch(_){}
+try{Promise.all([document.fonts.load('600 54px "Playfair Display"'),document.fonts.load('400 19px Montserrat'),document.fonts.load('300 30px Montserrat'),document.fonts.load('italic 600 28px "Playfair Display"')]).catch(()=>{}).then(()=>FONTQ.forEach(f=>f()))}catch(_){}
 
 /* ---- ánh sáng + bóng đổ ---- */
 scene.add(new TH.HemisphereLight(NIGHT?0x5f7fa0:0xdfeeff,0x8a7458,K.hemi));
@@ -787,7 +788,7 @@ const lm=new TH.InstancedMesh(new TH.SphereGeometry(1,6,4),lmat,LV.length);
  lm.frustumCulled=false;lm.castShadow=true;lm.receiveShadow=true;scene.add(lm)}
 
 /* =========================================================
-   ÂM THANH ĐÊM: tiếng dế + tiếng chó sủa (WebAudio tổng hợp, bật sau cú chạm đầu tiên)
+   ÂM THANH: tiếng dế đêm + tiếng chó sủa / gầm gừ / cắn / ư ử (WebAudio tổng hợp)
    ========================================================= */
 let ac=null,mg=null,nb=null,SND=false,auto=false;
 const snd=document.createElement('button');snd.type='button';snd.setAttribute('aria-label','Âm thanh / Sound');
@@ -803,11 +804,14 @@ function crickets(){[4300,4700,3900].forEach((f,k)=>{const loop=()=>{
    g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.022,s+.012);g.gain.exponentialRampToValueAtTime(.0005,s+.05);
    o.connect(g);g.connect(mg);o.start(s);o.stop(s+.06)}}
  setTimeout(loop,500+Math.random()*900+k*300)};setTimeout(loop,k*350)})}
-function aOn(){if(!NIGHT)return;try{
- if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.connect(ac.destination);
-  nb=ac.createBuffer(1,Math.floor(ac.sampleRate*.3),ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;crickets()}
- if(ac.state==='suspended')ac.resume();mg.gain.value=.9;SND=true;updSnd()}catch(_){}}
+function ensureAC(){
+ if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.gain.value=.9;mg.connect(ac.destination);
+  nb=ac.createBuffer(1,Math.floor(ac.sampleRate*.3),ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;if(NIGHT)crickets()}
+ if(ac.state==='suspended')ac.resume();
+}
+function aOn(){if(!NIGHT)return;try{ensureAC();mg.gain.value=.9;SND=true;updSnd()}catch(_){}}
 function aOff(){SND=false;if(mg)mg.gain.value=0;updSnd()}
+const dogSfx=fn=>{if((auto&&!SND)||!live())return;try{ensureAC();if(mg)mg.gain.value=.9;fn()}catch(_){}};
 const bark=low=>{if(!SND||!ac||ac.state!=='running'||!live())return;
  const f0=low?300:520,n=low?1:2;
  for(let i=0;i<n;i++){const s=ac.currentTime+.02+i*.16,o=ac.createOscillator(),g=ac.createGain(),bp=ac.createBiquadFilter();
@@ -817,14 +821,47 @@ const bark=low=>{if(!SND||!ac||ac.state!=='running'||!live())return;
   o.connect(bp);bp.connect(g);g.connect(mg);o.start(s);o.stop(s+.2);
   const ns=ac.createBufferSource(),nf=ac.createBiquadFilter(),ng=ac.createGain();ns.buffer=nb;nf.type='bandpass';nf.frequency.value=1800;
   ng.gain.setValueAtTime(.1,s);ng.gain.exponentialRampToValueAtTime(.001,s+.1);ns.connect(nf);nf.connect(ng);ng.connect(mg);ns.start(s);ns.stop(s+.12)}};
+// Aki: gầm gừ + tiếng cắn đớp
+const growlBite=()=>dogSfx(()=>{
+ const t0=ac.currentTime;
+ const o1=ac.createOscillator(),o2=ac.createOscillator(),lfo=ac.createOscillator(),lg=ac.createGain(),lp=ac.createBiquadFilter(),g=ac.createGain();
+ o1.type='sawtooth';o2.type='triangle';
+ o1.frequency.setValueAtTime(82,t0);o1.frequency.linearRampToValueAtTime(98,t0+.35);o1.frequency.linearRampToValueAtTime(68,t0+1.35);
+ o2.frequency.setValueAtTime(123,t0);o2.frequency.linearRampToValueAtTime(146,t0+.35);o2.frequency.linearRampToValueAtTime(102,t0+1.35);
+ lfo.type='sine';lfo.frequency.value=29;lg.gain.value=18;
+ lfo.connect(lg);lg.connect(o1.frequency);lg.connect(o2.frequency);
+ lp.type='lowpass';lp.frequency.value=320;lp.Q.value=2.2;
+ g.gain.setValueAtTime(.001,t0);g.gain.linearRampToValueAtTime(.28,t0+.08);g.gain.setValueAtTime(.24,t0+.95);g.gain.exponentialRampToValueAtTime(.001,t0+1.4);
+ o1.connect(lp);o2.connect(lp);lp.connect(g);g.connect(mg);
+ o1.start(t0);o2.start(t0);lfo.start(t0);o1.stop(t0+1.45);o2.stop(t0+1.45);lfo.stop(t0+1.45);
+ [.18,.52].forEach(dt=>{
+  const s=t0+dt,bo=ac.createOscillator(),bg=ac.createGain(),ns=ac.createBufferSource(),nf=ac.createBiquadFilter(),ng=ac.createGain();
+  bo.type='triangle';bo.frequency.setValueAtTime(440,s);bo.frequency.exponentialRampToValueAtTime(85,s+.06);
+  bg.gain.setValueAtTime(.35,s);bg.gain.exponentialRampToValueAtTime(.001,s+.07);
+  bo.connect(bg);bg.connect(mg);bo.start(s);bo.stop(s+.08);
+  ns.buffer=nb;nf.type='bandpass';nf.frequency.value=2200;nf.Q.value=1.5;
+  ng.gain.setValueAtTime(.22,s);ng.gain.exponentialRampToValueAtTime(.001,s+.055);
+  ns.connect(nf);nf.connect(ng);ng.connect(mg);ns.start(s);ns.stop(s+.065);
+ });
+});
+// Chi: kêu ư ử vui sướng khi được gãi bụng
+const whimper=()=>dogSfx(()=>{
+ const t0=ac.currentTime;
+ [[0,.52,540,680,470],[.62,.55,580,740,500],[1.32,.6,520,660,440],[2.05,.55,560,700,480]].forEach(([dt,dur,f1,f2,f3])=>{
+  const s=t0+dt,o=ac.createOscillator(),g=ac.createGain();
+  o.type='sine';o.frequency.setValueAtTime(f1,s);o.frequency.linearRampToValueAtTime(f2,s+dur*.38);o.frequency.exponentialRampToValueAtTime(f3,s+dur);
+  g.gain.setValueAtTime(.001,s);g.gain.linearRampToValueAtTime(.11,s+dur*.22);g.gain.exponentialRampToValueAtTime(.0008,s+dur);
+  o.connect(g);g.connect(mg);o.start(s);o.stop(s+dur+.04);
+ });
+});
 if(NIGHT){updSnd();split.appendChild(snd);
  snd.onclick=()=>{auto=true;SND?aOff():aOn()};
  const g1=e=>{if(auto||e.target===snd)return;aOn();setTimeout(()=>{if(ac&&ac.state==='running')auto=true},250)};
  addEventListener('pointerdown',g1);addEventListener('pointerup',g1)}
 
 /* =========================================================
-   AKI (akita x shiba, to hơn, tai cụp) & CHI (chó cỏ Việt Nam, nhỏ hơn, tai dựng, vòng cổ xanh)
-   Ngày: nằm ngủ quanh ne'hub, cứ 15s đổi chỗ. Đêm: chạy qua chạy lại, sủa dẫn khách vào The Core.
+   AKI (akita x shiba, to hơn, tai cụp - "Don't touch me": chạm vô cắn & gầm gừ)
+   CHI (chó cỏ Việt Nam, nhỏ hơn, tai dựng, vòng cổ xanh - "Touch my belly please!": chạm vô nằm ngửa & kêu ư ử)
    ========================================================= */
 const dogs=[];
 const gY=(x,z)=>(x>-6.05&&x<1.05&&z>-2&&z<.8)?.2:(x>-6.05&&x<1.05&&z>=.8&&z<1.25)?.1:.04;
@@ -847,6 +884,10 @@ function mkDog(o){
  sph(1,mb,0,.42,0,.17,.17,.38);sph(1,mw,0,.36,.18,.135,.13,.22);sph(1,mb,0,.45,-.2,.16,.16,.2);
  const H=new TH.Group();H.position.set(0,.6,.4);B.add(H);
  sph(.15,mb,0,0,0,1,.95,1.05,H);sph(.07,mm,0,-.04,.13,1,.85,1.4,H);sph(.026,dk,0,-.03,.235,1,.8,1,H);
+ // hàm dưới + răng nanh (mở ra khi Aki cắn)
+ const J=new TH.Group();J.position.set(0,-.065,.07);H.add(J);
+ sph(.055,mm,0,-.01,.06,1,.55,1.25,J);sph(.048,flat('#4a151b'),0,.008,.055,1,.4,1.1,J);
+ [-1,1].forEach(k=>{const f=new TH.Mesh(new TH.ConeGeometry(.012,.032,4),flat('#f7f4eb'));f.position.set(k*.028,.022,.1);J.add(f)});
  [-1,1].forEach(k=>{
   sph(.017,dk,k*.062,.035,.128,1,1.1,.8,H);
   if(o.floppy){const e=sph(.07,me,k*.135,.05,-.01,.35,1.2,.9,H);e.rotation.z=k*.45}
@@ -859,17 +900,51 @@ function mkDog(o){
  sph(1,mb,0,.07,-.03,.04,.1,.04,T).rotation.x=-.35;sph(1,mb,0,.16,0,.045,.08,.045,T).rotation.x=.6;sph(.04,mw,0,.2,.04,1,1,1,T);
  if(o.collar){const c=new TH.Mesh(new TH.TorusGeometry(.105,.013,6,16),flat('#7ed321'));c.position.set(0,.52,.3);c.rotation.x=1.2;B.add(c)}
  G.scale.setScalar(o.s);
- const d={G,B,H,T,L,o,x:0,z:0,y:.04,yaw:0,pose:0,phase:Math.random()*6,path:[],pi:0,state:'',t:0,spot:null,next:null,dur:15,faceTo:0,li:0,bn:0,legs:null};
+ // vùng bấm tương tác (bao quanh thân chó + bong bóng)
+ const hit=box(.85,1.35,1.15,new TH.MeshBasicMaterial({visible:false}),0,.65,.05,G);
+ // nhãn bong bóng cảnh báo / mời gọi phía trên đầu chó
+ const bc=document.createElement('canvas');bc.width=460;bc.height=136;const bx2=bc.getContext('2d'),btx=new TH.CanvasTexture(bc);
+ const bbl=new TH.Sprite(new TH.SpriteMaterial({map:btx,transparent:true,depthWrite:false,fog:false}));scene.add(bbl);
+ let curTxt=o.label,curBd=o.bCol;
+ const drawBbl=(txt,bd)=>{curTxt=txt;curBd=bd;const w=460,h=136,bh=104,r=26;
+  bx2.clearRect(0,0,w,h);
+  bx2.beginPath();bx2.moveTo(r,6);bx2.lineTo(w-r,6);bx2.quadraticCurveTo(w-6,6,w-6,r);bx2.lineTo(w-6,bh-r);bx2.quadraticCurveTo(w-6,bh,w-r,bh);
+  bx2.lineTo(w/2+14,bh);bx2.lineTo(w/2,h-6);bx2.lineTo(w/2-14,bh);
+  bx2.lineTo(r,bh);bx2.quadraticCurveTo(6,bh,6,bh-r);bx2.lineTo(6,r);bx2.quadraticCurveTo(6,6,r,6);bx2.closePath();
+  bx2.fillStyle='rgba(12,10,8,.84)';bx2.fill();bx2.lineWidth=4;bx2.strokeStyle=bd;bx2.stroke();
+  bx2.fillStyle='#f8f5ec';bx2.textAlign='center';bx2.textBaseline='middle';bx2.font='italic 600 28px "Playfair Display",serif';
+  bx2.fillText(txt,w/2,bh/2+2);btx.needsUpdate=true};
+ drawBbl(o.label,o.bCol);FONTQ.push(()=>drawBbl(curTxt,curBd));
+ const d={G,B,H,J,T,L,o,hit,bbl,drawBbl,x:0,z:0,y:.04,yaw:0,pose:0,phase:Math.random()*6,path:[],pi:0,state:'',t:0,spot:null,next:null,dur:15,faceTo:0,li:0,bn:0,legs:null,act:'',at:0};
  d.zz=new TH.Sprite(new TH.SpriteMaterial({map:ZT,transparent:true,opacity:0,depthWrite:false,fog:false}));scene.add(d.zz);
  d.place=(x,z,yaw)=>{d.x=x;d.z=z;d.yaw=yaw;d.y=gY(x,z)};
+ d.pet=()=>{
+  if(o.mode==='bite'){d.act='bite';d.at=0;d.drawBbl('GRRR!! *CHOMP*','#ff5252');growlBite()}
+  else{d.act='belly';d.at=d.act==='belly'?.35:0;d.drawBbl('Ư ử~ ♡ Hehe!','#ffb84d');whimper()}
+ };
  d.follow=(dt,sp)=>{const P=d.path[d.pi];if(!P)return false;
   const dx=P[0]-d.x,dz=P[1]-d.z,dist=Math.hypot(dx,dz);
   if(dist<.15){d.pi++;return d.pi<d.path.length}
   d.yaw+=angD(d.yaw,Math.atan2(dx,dz))*Math.min(1,dt*9);
   const st=Math.min(dist,sp*dt);d.x+=dx/dist*st;d.z+=dz/dist*st;return true};
  d.update=(dt,t)=>{
-  let mv=false,sp=0,hop=0,look=0;
-  if(!NIGHT){
+  let mv=false,sp=0,hop=0,look=0,rl=0,lunge=0,jaw=0,tremor=0;
+  if(d.act==='bite'){
+   d.at+=dt;d.pose=Math.max(0,d.pose-dt*4);
+   const aim=Math.atan2(cam.position.x-d.x,cam.position.z-d.z);
+   d.yaw+=angD(d.yaw,aim)*Math.min(1,dt*14);
+   if(d.at<.65){
+    const s1=Math.sin(Math.min(1,d.at/.32)*Math.PI),s2=d.at>.32?Math.sin(Math.min(1,(d.at-.32)/.33)*Math.PI):0;
+    lunge=(s1*.28+s2*.22);hop=(s1+s2)*.09;jaw=(s1+s2)*.58;look=-.25;
+   }else{
+    lunge=.06;look=.24;tremor=Math.sin(t*58)*.016;
+   }
+   if(d.at>=1.55){d.act='';d.drawBbl(o.label,o.bCol);if(NIGHT){d.state='run'}}
+  }else if(d.act==='belly'){
+   d.at+=dt;d.pose=Math.max(0,d.pose-dt*3);
+   rl=d.at<.45?ease(d.at/.45):(d.at>2.6?ease(Math.max(0,(3.1-d.at)/.5)):1);
+   if(d.at>=3.1){d.act='';d.drawBbl(o.label,o.bCol);if(NIGHT){d.state='run'}}
+  }else if(!NIGHT){
    if(d.state==='sleep'){d.pose=Math.min(1,d.pose+dt*1.6);d.t+=dt;
     if(d.t>=d.dur){const n=pickSpot(d);d.path=route(d.spot,n);d.pi=0;d.next=n;d.state='rise'}}
    else if(d.state==='rise'){d.pose=Math.max(0,d.pose-dt*1.4);if(d.pose<=.02)d.state='walk'}
@@ -885,22 +960,34 @@ function mkDog(o){
   }
   d.phase+=dt*(mv?sp*(NIGHT?3.2:5.5):0);
   const amp=mv?(NIGHT?.95:.5):0,sw=Math.sin(d.phase)*amp,p=d.pose,P=1-p,lie=[-1.35,-1.35,1.3,1.3];
-  d.L.forEach((l,i)=>{const s=(i===0||i===3)?sw:-sw;l.rotation.x=s*P+lie[i]*p});
+  d.L.forEach((l,i)=>{
+   const s=(i===0||i===3)?sw:-sw;
+   if(rl>.01){
+    const bx=i<2?(-.72+Math.sin(t*11+(i?3.14:0))*.24):(.75+Math.cos(t*11+(i===2?0:3.14))*.24);
+    l.rotation.x=(s*P+lie[i]*p)*(1-rl)+bx*rl;
+    l.rotation.z=(i%2?-.28:.28)*rl;
+   }else{l.rotation.x=s*P+lie[i]*p;l.rotation.z=0}
+  });
   const bounce=(NIGHT&&mv)?Math.abs(Math.sin(d.phase))*.07:0;
-  d.B.position.y=-.24*p+bounce+hop;
-  d.B.rotation.x=(NIGHT&&mv)?Math.sin(d.phase)*.06:0;
+  d.B.position.set(tremor,-.24*p-.14*rl+bounce+hop+Math.abs(Math.sin(t*7))*.015*rl,lunge);
+  d.B.rotation.x=(NIGHT&&mv)?Math.sin(d.phase)*.06:(d.act==='bite'?.14:0);
+  d.B.rotation.z=Math.PI*rl;
   d.B.scale.y=1+Math.sin(t*2.2+d.phase)*.025*p;
-  d.H.position.y=.6-.22*p;d.H.rotation.x=.5*p+look*P;
-  d.T.rotation.z=Math.sin(t*(NIGHT?15:2.5))*(NIGHT?.55:.08);
+  d.H.position.y=.6-.22*p;d.H.rotation.x=.5*p+look*P-.32*rl;d.H.rotation.z=Math.sin(t*5)*.2*rl;
+  d.J.rotation.x=jaw;
+  d.T.rotation.z=Math.sin(t*(rl>.2?18:(NIGHT?15:2.5)))*(rl>.2?.65:(NIGHT?.55:.08));
   d.y+=(gY(d.x,d.z)-d.y)*Math.min(1,dt*8);
   d.G.position.set(d.x,d.y,d.z);d.G.rotation.y=d.yaw;
+  // cập nhật vị trí nhãn bong bóng phía trên đầu chó
+  const by=d.y+(1.02-.18*p-.12*rl)*d.o.s+Math.sin(t*2.4+d.phase)*.02;
+  d.bbl.position.set(d.x+tremor,by,d.z);d.bbl.scale.set(1.22,.36,1);
   const zs=d.zz;
-  if(!NIGHT&&d.state==='sleep'&&p>.95){const u=(t*.3+d.o.zo)%1,sc=.18+.2*u;zs.position.set(d.x+.2*d.o.s,d.y+(.38+u*.5)*d.o.s,d.z);zs.scale.set(sc,sc,1);zs.material.opacity=Math.sin(u*Math.PI)*.85}
+  if(!NIGHT&&!d.act&&d.state==='sleep'&&p>.95){const u=(t*.3+d.o.zo)%1,sc=.18+.2*u;zs.position.set(d.x+.34*d.o.s,d.y+(.38+u*.5)*d.o.s,d.z);zs.scale.set(sc,sc,1);zs.material.opacity=Math.sin(u*Math.PI)*.85}
   else zs.material.opacity=0;
  };
  return d}
-const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0});
-const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5});
+const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',label:"Aki: Don't touch me",bCol:'#ff7b6b'});
+const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',label:'Chi: Touch my belly please!',bCol:'#d4af37'});
 dogs.push(aki,chi);
 if(!NIGHT){[[aki,0,0,-.6],[chi,1,7.5,.8]].forEach(([d,i,t0,yw])=>{d.spot=SP[i];d.place(SP[i].p[0],SP[i].p[1],yw);d.pose=1;d.state='sleep';d.t=t0;d.dur=15})}
 else{aki.place(1.85,3.2,0);chi.place(2.4,3.5,0);
@@ -911,9 +998,11 @@ const base=()=>W()/H()<1?{p:V(2.2,1.75,9.5),l:V(1.9,2.0,-9)}:{p:V(3.1,1.7,8.8),l
 let yaw=0,pit=0,ty=0,tp=0,go=0,t0=0,P0,L0,CRV,curL=base().l,drag=null,mxT=0,myT=0,mx=0,my=0,gxT=0,gyT=0,gx=0,gy=0,gb=null,askedG=0;
 const LD=V(BX,1.4,BZ-3),ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,cl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const ray=new TH.Raycaster(),m2=new TH.Vector2();
-const hitDoor=e=>{const r=R.domElement.getBoundingClientRect();m2.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
- ray.setFromCamera(m2,cam);const hh=ray.intersectObjects([hitCore,hitNh])[0];return hh?(hh.object===hitNh?'nh':'core'):null};
-const act=k=>{if(!k||go)return;if(k==='core')NIGHT?enter():note(CORE_NOTE);else noteQ()};
+const hitTarget=e=>{const r=R.domElement.getBoundingClientRect();m2.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+ ray.setFromCamera(m2,cam);
+ const hd=ray.intersectObjects(dogs.map(d=>d.hit))[0];if(hd)return dogs.find(d=>d.hit===hd.object);
+ const hh=ray.intersectObjects([hitCore,hitNh])[0];return hh?(hh.object===hitNh?'nh':'core'):null};
+const act=k=>{if(!k||go)return;if(k.pet){k.pet();return}if(k==='core')NIGHT?enter():note(CORE_NOTE);else noteQ()};
 const askGyro=()=>{if(askedG)return;askedG=1;try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().catch(()=>{})}catch(_){}};
 function enter(){if(go)return;go=1;t0=performance.now();P0=cam.position.clone();L0=curL.clone();
  CRV=new TH.CatmullRomCurve3([P0,V(2.07,1.65,3),V(2.07,1.6,-5.5),V(2.07,1.55,-10.2),V(2.07,1.5,BZ+.3)]);
@@ -924,9 +1013,9 @@ addEventListener('pointermove',e=>{
  if(!drag||go)return;
  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m=Math.max(drag.m,Math.abs(dx)+Math.abs(dy));
  ty=cl(ty-dx/W()*1.6,-.6,.6);tp=cl(tp+dy/H()*.8,-.3,.3);drag.x=e.clientX;drag.y=e.clientY});
-addEventListener('pointerup',e=>{if(drag&&drag.m<6&&e.target===R.domElement){askGyro();act(hitDoor(e))}drag=null});
+addEventListener('pointerup',e=>{if(drag&&drag.m<6&&e.target===R.domElement){askGyro();act(hitTarget(e))}drag=null});
 addEventListener('deviceorientation',e=>{if(e.gamma==null||e.beta==null)return;if(gb===null)gb=e.beta;gxT=cl(e.gamma/25,-1,1);gyT=cl((e.beta-gb)/25,-1,1)});
-wrap.addEventListener('pointermove',e=>{if(drag||go)return;const k=hitDoor(e);wrap.style.cursor=k?'pointer':'grab'});
+wrap.addEventListener('pointermove',e=>{if(drag||go)return;const k=hitTarget(e);wrap.style.cursor=k?'pointer':'grab'});
 addEventListener('resize',()=>{R.setSize(W(),H());cam.aspect=W()/H();cam.updateProjectionMatrix()});
 cam.aspect=W()/H();cam.updateProjectionMatrix();
 
