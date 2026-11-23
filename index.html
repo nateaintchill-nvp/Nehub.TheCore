@@ -15,6 +15,7 @@ fontFamily:{playfair:['"Playfair Display"','serif'],inter:['Inter','sans-serif']
 <script>document.documentElement.classList.add('g3d')</script>
 <style>
 body{background:#000;color:#fff;overflow-x:hidden}
+#split{height:100%;height:100svh;height:100dvh}
 .panel{transition:width .8s cubic-bezier(.65,0,.35,1),height .8s cubic-bezier(.65,0,.35,1),opacity .5s ease}
 .frosted{background:rgba(20,20,20,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .nehub-bg{background:url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop') center/cover #111}
@@ -72,8 +73,8 @@ body{background:#000;color:#fff;overflow-x:hidden}
 @keyframes neon{0%,19%,21%,60%,62%,100%{opacity:1}20%,61%{opacity:.55}}
 html.g3d #nehub,html.g3d #core{display:none!important}
 #split [data-lang],#split .g3d-top{top:max(1rem,env(safe-area-inset-top))}
-#s3d-ui{padding-top:calc(4.25rem + env(safe-area-inset-top,0px));padding-bottom:calc(5rem + env(safe-area-inset-bottom,0px))}
-@media(min-width:768px){#s3d-ui{padding-bottom:calc(2rem + env(safe-area-inset-bottom,0px))}}
+#s3d-ui{padding-top:calc(4.25rem + env(safe-area-inset-top,0px));padding-bottom:calc(5.75rem + env(safe-area-inset-bottom,0px))}
+@media(min-width:768px){#s3d-ui{padding-bottom:calc(2.25rem + env(safe-area-inset-bottom,0px))}}
 #site nav{padding-top:max(1rem,env(safe-area-inset-top))}
 #site nav button{white-space:nowrap}
 @supports(height:100svh){html .min-h-screen{min-height:100svh}}
@@ -85,7 +86,7 @@ html.g3d #nehub,html.g3d #core{display:none!important}
 <body class="overflow-hidden selection:bg-vintage-gold selection:text-forest-green">
 
 <!-- SPLIT SCREEN: CỔNG -->
-<div id="split" class="flex flex-col md:flex-row w-full h-screen h-[100dvh] fixed inset-0 z-50">
+<div id="split" class="flex flex-col md:flex-row w-full fixed inset-0 z-50">
   <button type="button" data-lang aria-label="Tiếng Việt / English" class="absolute top-4 right-4 z-30 font-inter text-xs text-gray-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 hover:border-vintage-gold backdrop-blur-md transition"><span data-l="vi">VI</span> / <span data-l="en">EN</span></button>
 
   <div id="nehub" class="panel w-full h-[58%] md:h-full md:w-[70%] nehub-bg relative overflow-hidden flex items-center justify-center">
@@ -100,7 +101,7 @@ html.g3d #nehub,html.g3d #core{display:none!important}
       </p>
       <p class="mt-8 md:mt-12 text-[11px] md:text-xs tracking-[.4em] uppercase font-montserrat text-gray-300">ne'hub co-working space</p>
     </div>
-    <p class="absolute bottom-12 md:bottom-8 inset-x-0 text-center px-6 font-inter font-light text-xs md:text-sm text-gray-300/80 flex items-center justify-center gap-2">
+    <p class="absolute bottom-14 md:bottom-8 inset-x-0 text-center px-6 font-inter font-light text-xs md:text-sm text-gray-300/90 flex items-center justify-center gap-2">
       <span data-t>Bên cạnh ne'hub có một cánh cửa khác.</span>
       <svg class="w-4 h-4 text-vintage-gold hint-arrow shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
     </p>
@@ -341,6 +342,7 @@ const T=s=>lang==='en'&&EN[s]||s;
 function applyLang(first){
  document.documentElement.lang=lang;
  document.querySelectorAll('[data-t]').forEach(el=>{if(el.dataset.vi===undefined)el.dataset.vi=el.innerHTML;el.innerHTML=T(el.dataset.vi)});
+ const sub=$('s3d-sub');if(sub&&sub.dataset.vi)sub.textContent=T(sub.dataset.vi);
  renderStory();renderMenu();
  if(!first)document.querySelectorAll('#story-list .reveal,#menu .reveal').forEach(e=>e.classList.add('in'));
  document.querySelectorAll('[data-lang] [data-l]').forEach(e=>e.classList.toggle('text-vintage-gold',e.dataset.l===lang));
@@ -489,19 +491,18 @@ R.shadowMap.enabled=true;R.shadowMap.type=TH.PCFSoftShadowMap;
 
 /* ---- DOM ---- */
 const st=document.createElement('style');
-st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:1.5rem;padding-right:1.5rem;pointer-events:none;transition:opacity .6s}#s3d-hint{margin:0;max-width:28rem;font-family:"Playfair Display",serif;font-style:italic;font-size:.95rem;line-height:1.5;letter-spacing:.02em;color:#f3f4f6;text-shadow:0 2px 12px rgba(0,0,0,.9)}@media(min-width:768px){#s3d-hint{font-size:1.125rem;max-width:40rem}}';
+st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:1rem;padding-right:1rem;pointer-events:none;transition:opacity .6s}#s3d-box{max-width:min(92vw,34rem);background:rgba(10,10,8,.62);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:1rem;padding:.6rem 1.1rem;box-shadow:0 8px 28px rgba(0,0,0,.55)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.95rem;line-height:1.45;letter-spacing:.02em;color:#f3f4f6;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.25rem 0 0;font-family:Inter,sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;color:rgba(212,175,55,.92)}@media(min-width:768px){#s3d-hint{font-size:1.1rem}#s3d-sub{font-size:.78rem}}';
 document.head.appendChild(st);
 const wrap=document.createElement('div');wrap.id='s3d';wrap.appendChild(R.domElement);split.prepend(wrap);
 const ui=document.createElement('div');ui.id='s3d-ui';
-ui.className='absolute inset-0 z-20 pointer-events-none flex flex-col justify-end items-center text-center px-6';
-ui.innerHTML='<p id="s3d-hint" class="font-playfair italic text-sm md:text-lg text-gray-100 tracking-wide text-balance" style="text-shadow:0 2px 12px rgba(0,0,0,.9)"></p>';
-ui.style.background='linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0) 32%,rgba(0,0,0,0) 62%,rgba(0,0,0,.6))';split.appendChild(ui);
+ui.innerHTML='<div id="s3d-box"><p id="s3d-hint"></p><p id="s3d-sub"></p></div>';
+ui.style.background='linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 62%,rgba(0,0,0,.55))';split.appendChild(ui);
 const tg=document.createElement('button');tg.type='button';tg.setAttribute('aria-label','Ngày / Đêm');tg.className='g3d-el g3d-top absolute left-4 z-30 font-inter text-xs text-gray-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 hover:border-vintage-gold backdrop-blur-md transition';tg.textContent='☀ / ☾';
 tg.onclick=()=>{const u=new URL(location.href);u.searchParams.set('mode',NIGHT?'day':'night');location.href=u};split.appendChild(tg);
 // lời nhắc (bong bóng thoại) bên cạnh nút ngày / đêm
 const sb=document.createElement('div');sb.setAttribute('aria-hidden','true');
-sb.className='g3d-el g3d-top absolute left-[5.4rem] z-30 pointer-events-none max-w-[calc(100vw-12rem)] rounded-xl border border-vintage-gold/40 bg-black/60 backdrop-blur-md px-3 py-1.5 font-playfair italic text-[11px] md:text-sm text-gray-100 leading-snug text-balance';
-sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/60 border-l border-b border-vintage-gold/40"></i>help us to shut the sun down!';
+sb.className='g3d-el g3d-top absolute left-[5.4rem] z-30 pointer-events-none max-w-[calc(100vw-11.5rem)] rounded-xl border border-vintage-gold/40 bg-black/65 backdrop-blur-md px-3 py-1.5 font-playfair italic text-[11px] md:text-sm text-gray-100 leading-snug text-balance';
+sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/65 border-l border-b border-vintage-gold/40"></i>help us to shut the sun down!';
 split.appendChild(sb);
 const ov=document.createElement('div');ov.className='g3d-el absolute inset-0 z-[25] bg-black pointer-events-none';ov.style.opacity=0;split.appendChild(ov);
 const nt=document.createElement('div');nt.setAttribute('role','status');nt.setAttribute('aria-live','polite');
@@ -510,8 +511,12 @@ const CORE_NOTE="The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp b�
 let ntT;const show=(html,ms)=>{nt.innerHTML=html;nt.style.opacity=1;clearTimeout(ntT);ntT=setTimeout(()=>nt.style.opacity=0,ms)};
 const note=m=>show(T(m),5000);
 const noteQ=()=>show('<span class="block not-italic font-montserrat font-light lowercase text-lg md:text-xl">“beautiful things come late in life,<span class="block mt-2">thanks for waiting for us…</span><span class="block mt-2 text-white font-medium">see you soon.”</span></span>'+(NIGHT?'<span class="block mt-4 not-italic font-inter font-light text-xs md:text-sm text-gray-400">'+T(NH_NOTE)+'</span>':''),6500);
-Object.assign(EN,{"The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp bạn lúc đó…":"We're open 8pm – 2am every night, see you then…","ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…":"ne'hub is closed for the night. See you in the morning…",'Đi vào lối nhỏ':'Walk down the alley','Kéo để nhìn quanh':'Drag to look around'});
-ui.querySelectorAll('[data-t]').forEach(e=>e.innerHTML=T(e.dataset.vi));
+Object.assign(EN,{
+ "The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp bạn lúc đó…":"We're open 8pm – 2am every night, see you then…",
+ "ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…":"ne'hub is closed for the night. See you in the morning…",
+ 'Chạm vào cửa cuối hẻm để vào · Kéo để nhìn quanh':'Tap the alley door to enter · Drag to look around',
+ 'Bấm ☀ / ☾ góc trái để tắt nắng · Kéo để nhìn quanh':'Tap ☀ / ☾ top-left to shut the sun down · Drag to look around'
+});
 
 /* ---- ngày / đêm ---- */
 const qs=new URLSearchParams(location.search),hr=new Date().getHours(),mq=qs.get('mode');
@@ -520,6 +525,7 @@ const K=NIGHT?{bg:['#04080e','#0d1b28'],fog:.026,hemi:.34,sun:.28,sunc:0x8fa8c8,
 R.toneMappingExposure=K.exp;
 if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc "help us..."
 document.getElementById('s3d-hint').textContent=NIGHT?'You need a drink now? Ask Aki & Chi, they will show you the way!':"Don't drink during the day, we need to work!";
+{const sub=document.getElementById('s3d-sub'),sv=NIGHT?'Chạm vào cửa cuối hẻm để vào · Kéo để nhìn quanh':'Bấm ☀ / ☾ góc trái để tắt nắng · Kéo để nhìn quanh';sub.dataset.vi=sv;sub.textContent=T(sv)}
 const scene=new TH.Scene();
 {const c=document.createElement('canvas');c.width=2;c.height=256;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,K.bg[0]);g.addColorStop(1,K.bg[1]);x.fillStyle=g;x.fillRect(0,0,2,256);
  scene.background=new TH.CanvasTexture(c);scene.fog=new TH.FogExp2(new TH.Color(K.bg[1]),K.fog)}
@@ -901,7 +907,7 @@ function mkDog(o){
  if(o.collar){const c=new TH.Mesh(new TH.TorusGeometry(.105,.013,6,16),flat('#7ed321'));c.position.set(0,.52,.3);c.rotation.x=1.2;B.add(c)}
  G.scale.setScalar(o.s);
  // vùng bấm tương tác (bao quanh thân chó + bong bóng)
- const hit=box(.85,1.35,1.15,new TH.MeshBasicMaterial({visible:false}),0,.65,.05,G);
+ const hit=box(.95,1.45,1.25,new TH.MeshBasicMaterial({visible:false}),0,.65,.05,G);
  // nhãn bong bóng cảnh báo / mời gọi phía trên đầu chó
  const bc=document.createElement('canvas');bc.width=460;bc.height=136;const bx2=bc.getContext('2d'),btx=new TH.CanvasTexture(bc);
  const bbl=new TH.Sprite(new TH.SpriteMaterial({map:btx,transparent:true,depthWrite:false,fog:false}));scene.add(bbl);
@@ -911,7 +917,7 @@ function mkDog(o){
   bx2.beginPath();bx2.moveTo(r,6);bx2.lineTo(w-r,6);bx2.quadraticCurveTo(w-6,6,w-6,r);bx2.lineTo(w-6,bh-r);bx2.quadraticCurveTo(w-6,bh,w-r,bh);
   bx2.lineTo(w/2+14,bh);bx2.lineTo(w/2,h-6);bx2.lineTo(w/2-14,bh);
   bx2.lineTo(r,bh);bx2.quadraticCurveTo(6,bh,6,bh-r);bx2.lineTo(6,r);bx2.quadraticCurveTo(6,6,r,6);bx2.closePath();
-  bx2.fillStyle='rgba(12,10,8,.84)';bx2.fill();bx2.lineWidth=4;bx2.strokeStyle=bd;bx2.stroke();
+  bx2.fillStyle='rgba(12,10,8,.86)';bx2.fill();bx2.lineWidth=4;bx2.strokeStyle=bd;bx2.stroke();
   bx2.fillStyle='#f8f5ec';bx2.textAlign='center';bx2.textBaseline='middle';bx2.font='italic 600 28px "Playfair Display",serif';
   bx2.fillText(txt,w/2,bh/2+2);btx.needsUpdate=true};
  drawBbl(o.label,o.bCol);FONTQ.push(()=>drawBbl(curTxt,curBd));
@@ -963,23 +969,24 @@ function mkDog(o){
   d.L.forEach((l,i)=>{
    const s=(i===0||i===3)?sw:-sw;
    if(rl>.01){
-    const bx=i<2?(-.72+Math.sin(t*11+(i?3.14:0))*.24):(.75+Math.cos(t*11+(i===2?0:3.14))*.24);
+    const bx=i<2?(-.65+Math.sin(t*11+(i?3.14:0))*.26):(.68+Math.cos(t*11+(i===2?0:3.14))*.26);
     l.rotation.x=(s*P+lie[i]*p)*(1-rl)+bx*rl;
-    l.rotation.z=(i%2?-.28:.28)*rl;
+    l.rotation.z=(i%2?-.26:.26)*rl;
    }else{l.rotation.x=s*P+lie[i]*p;l.rotation.z=0}
   });
   const bounce=(NIGHT&&mv)?Math.abs(Math.sin(d.phase))*.07:0;
-  d.B.position.set(tremor,-.24*p-.14*rl+bounce+hop+Math.abs(Math.sin(t*7))*.015*rl,lunge);
+  // khi lật ngửa (rl -> 1), nâng tâm B lên +0.58 để lưng nằm trên mặt đất thay vì chui xuống đất
+  d.B.position.set(tremor,(-.24*p)*(1-rl)+.58*rl+bounce+hop+Math.abs(Math.sin(t*7))*.015*rl,lunge);
   d.B.rotation.x=(NIGHT&&mv)?Math.sin(d.phase)*.06:(d.act==='bite'?.14:0);
   d.B.rotation.z=Math.PI*rl;
   d.B.scale.y=1+Math.sin(t*2.2+d.phase)*.025*p;
-  d.H.position.y=.6-.22*p;d.H.rotation.x=.5*p+look*P-.32*rl;d.H.rotation.z=Math.sin(t*5)*.2*rl;
+  d.H.position.y=(.6-.22*p)*(1-rl)+.46*rl;d.H.rotation.x=.5*p+look*P-.35*rl;d.H.rotation.z=Math.sin(t*5)*.2*rl;
   d.J.rotation.x=jaw;
   d.T.rotation.z=Math.sin(t*(rl>.2?18:(NIGHT?15:2.5)))*(rl>.2?.65:(NIGHT?.55:.08));
   d.y+=(gY(d.x,d.z)-d.y)*Math.min(1,dt*8);
   d.G.position.set(d.x,d.y,d.z);d.G.rotation.y=d.yaw;
   // cập nhật vị trí nhãn bong bóng phía trên đầu chó
-  const by=d.y+(1.02-.18*p-.12*rl)*d.o.s+Math.sin(t*2.4+d.phase)*.02;
+  const by=d.y+((1.02-.18*p)*(1-rl)+.74*rl)*d.o.s+Math.sin(t*2.4+d.phase)*.02;
   d.bbl.position.set(d.x+tremor,by,d.z);d.bbl.scale.set(1.22,.36,1);
   const zs=d.zz;
   if(!NIGHT&&!d.act&&d.state==='sleep'&&p>.95){const u=(t*.3+d.o.zo)%1,sc=.18+.2*u;zs.position.set(d.x+.34*d.o.s,d.y+(.38+u*.5)*d.o.s,d.z);zs.scale.set(sc,sc,1);zs.material.opacity=Math.sin(u*Math.PI)*.85}
