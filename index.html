@@ -342,7 +342,7 @@ const T=s=>lang==='en'&&EN[s]||s;
 function applyLang(first){
  document.documentElement.lang=lang;
  document.querySelectorAll('[data-t]').forEach(el=>{if(el.dataset.vi===undefined)el.dataset.vi=el.innerHTML;el.innerHTML=T(el.dataset.vi)});
- const sub=$('s3d-sub');if(sub&&sub.dataset.vi)sub.textContent=T(sub.dataset.vi);
+ if(window.sync3DLang)window.sync3DLang();
  renderStory();renderMenu();
  if(!first)document.querySelectorAll('#story-list .reveal,#menu .reveal').forEach(e=>e.classList.add('in'));
  document.querySelectorAll('[data-lang] [data-l]').forEach(e=>e.classList.toggle('text-vintage-gold',e.dataset.l===lang));
@@ -491,7 +491,7 @@ R.shadowMap.enabled=true;R.shadowMap.type=TH.PCFSoftShadowMap;
 
 /* ---- DOM ---- */
 const st=document.createElement('style');
-st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:1rem;padding-right:1rem;pointer-events:none;transition:opacity .6s}#s3d-box{max-width:min(92vw,34rem);background:rgba(10,10,8,.62);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:1rem;padding:.6rem 1.1rem;box-shadow:0 8px 28px rgba(0,0,0,.55)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.95rem;line-height:1.45;letter-spacing:.02em;color:#f3f4f6;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.25rem 0 0;font-family:Inter,sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;color:rgba(212,175,55,.92)}@media(min-width:768px){#s3d-hint{font-size:1.1rem}#s3d-sub{font-size:.78rem}}';
+st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:1rem;padding-right:1rem;pointer-events:none;transition:opacity .6s}#s3d-box{max-width:min(92vw,31rem);background:rgba(10,10,8,.68);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:1rem;padding:.75rem 1.35rem;box-shadow:0 10px 30px rgba(0,0,0,.6)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.96rem;line-height:1.5;letter-spacing:.015em;color:#f6f3eb;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.45rem 0 0;padding-top:.4rem;border-top:1px solid rgba(212,175,55,.18);font-family:Inter,sans-serif;font-weight:300;font-size:.73rem;line-height:1.45;letter-spacing:.03em;color:rgba(212,175,55,.95)}#s3d-sub span{display:inline-block}@media(min-width:768px){#s3d-box{padding:.85rem 1.75rem}#s3d-hint{font-size:1.1rem}#s3d-sub{font-size:.78rem}}';
 document.head.appendChild(st);
 const wrap=document.createElement('div');wrap.id='s3d';wrap.appendChild(R.domElement);split.prepend(wrap);
 const ui=document.createElement('div');ui.id='s3d-ui';
@@ -501,8 +501,8 @@ const tg=document.createElement('button');tg.type='button';tg.setAttribute('aria
 tg.onclick=()=>{const u=new URL(location.href);u.searchParams.set('mode',NIGHT?'day':'night');location.href=u};split.appendChild(tg);
 // lời nhắc (bong bóng thoại) bên cạnh nút ngày / đêm
 const sb=document.createElement('div');sb.setAttribute('aria-hidden','true');
-sb.className='g3d-el g3d-top absolute left-[5.4rem] z-30 pointer-events-none max-w-[calc(100vw-11.5rem)] rounded-xl border border-vintage-gold/40 bg-black/65 backdrop-blur-md px-3 py-1.5 font-playfair italic text-[11px] md:text-sm text-gray-100 leading-snug text-balance';
-sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/65 border-l border-b border-vintage-gold/40"></i>help us to shut the sun down!';
+sb.className='g3d-el g3d-top absolute left-[5.4rem] z-30 pointer-events-none max-w-[calc(100vw-11.2rem)] rounded-xl border border-vintage-gold/40 bg-black/68 backdrop-blur-md px-3 py-1.5 font-playfair italic text-[11.5px] md:text-sm text-gray-100 leading-snug';
+sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/68 border-l border-b border-vintage-gold/40"></i><span id="s3d-sb"></span>';
 split.appendChild(sb);
 const ov=document.createElement('div');ov.className='g3d-el absolute inset-0 z-[25] bg-black pointer-events-none';ov.style.opacity=0;split.appendChild(ov);
 const nt=document.createElement('div');nt.setAttribute('role','status');nt.setAttribute('aria-live','polite');
@@ -513,9 +513,7 @@ const note=m=>show(T(m),5000);
 const noteQ=()=>show('<span class="block not-italic font-montserrat font-light lowercase text-lg md:text-xl">“beautiful things come late in life,<span class="block mt-2">thanks for waiting for us…</span><span class="block mt-2 text-white font-medium">see you soon.”</span></span>'+(NIGHT?'<span class="block mt-4 not-italic font-inter font-light text-xs md:text-sm text-gray-400">'+T(NH_NOTE)+'</span>':''),6500);
 Object.assign(EN,{
  "The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp bạn lúc đó…":"We're open 8pm – 2am every night, see you then…",
- "ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…":"ne'hub is closed for the night. See you in the morning…",
- 'Chạm vào cửa cuối hẻm để vào · Kéo để nhìn quanh':'Tap the alley door to enter · Drag to look around',
- 'Bấm ☀ / ☾ góc trái để tắt nắng · Kéo để nhìn quanh':'Tap ☀ / ☾ top-left to shut the sun down · Drag to look around'
+ "ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…":"ne'hub is closed for the night. See you in the morning…"
 });
 
 /* ---- ngày / đêm ---- */
@@ -523,9 +521,30 @@ const qs=new URLSearchParams(location.search),hr=new Date().getHours(),mq=qs.get
 const NIGHT=mq==='night'||(mq!=='day'&&(hr>=18||hr<6)); // tự động: 6h-18h là ban ngày, còn lại là ban đêm (?mode=day / ?mode=night để xem thử)
 const K=NIGHT?{bg:['#04080e','#0d1b28'],fog:.026,hemi:.34,sun:.28,sunc:0x8fa8c8,exp:1.05}:{bg:['#86b9de','#e4eef1'],fog:.013,hemi:.95,sun:1.05,sunc:0xfff0d6,exp:1.08};
 R.toneMappingExposure=K.exp;
-if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc "help us..."
-document.getElementById('s3d-hint').textContent=NIGHT?'You need a drink now? Ask Aki & Chi, they will show you the way!':"Don't drink during the day, we need to work!";
-{const sub=document.getElementById('s3d-sub'),sv=NIGHT?'Chạm vào cửa cuối hẻm để vào · Kéo để nhìn quanh':'Bấm ☀ / ☾ góc trái để tắt nắng · Kéo để nhìn quanh';sub.dataset.vi=sv;sub.textContent=T(sv)}
+if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc tắt nắng
+window.sync3DLang=()=>{
+ const en=lang==='en';
+ const sbTxt=$('s3d-sb');
+ if(sbTxt)sbTxt.textContent=en?'Help us shut the sun down!':'Giúp tụi mình tắt nắng nhé!';
+ const hEl=$('s3d-hint'),sEl=$('s3d-sub');
+ if(!hEl||!sEl)return;
+ if(NIGHT){
+  hEl.innerHTML=en
+   ?"Need a drink right now?<br>Ask Aki &amp; Chi, they'll show you the way!"
+   :"Bạn đang cần một ly chứ?<br>Hỏi Aki &amp; Chi, hai đứa sẽ chỉ đường cho!";
+  sEl.innerHTML=en
+   ?'<span>Tap the alley door to enter</span><span class="mx-2 opacity-50">·</span><span>Drag to look around</span>'
+   :'<span>Chạm cửa cuối hẻm để vào</span><span class="mx-2 opacity-50">·</span><span>Kéo để nhìn quanh</span>';
+ }else{
+  hEl.innerHTML=en
+   ?"Don't drink during the day,<br>we need to work!"
+   :"Ban ngày đừng uống nhé,<br>tụi mình còn phải làm việc!";
+  sEl.innerHTML=en
+   ?'<span>Tap ☀ / ☾ top-left to shut the sun down</span><span class="mx-2 opacity-50">·</span><span>Drag to look around</span>'
+   :'<span>Bấm ☀ / ☾ góc trái để tắt nắng</span><span class="mx-2 opacity-50">·</span><span>Kéo để nhìn quanh</span>';
+ }
+};
+window.sync3DLang();
 const scene=new TH.Scene();
 {const c=document.createElement('canvas');c.width=2;c.height=256;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,K.bg[0]);g.addColorStop(1,K.bg[1]);x.fillStyle=g;x.fillRect(0,0,2,256);
  scene.background=new TH.CanvasTexture(c);scene.fog=new TH.FogExp2(new TH.Color(K.bg[1]),K.fog)}
@@ -975,7 +994,6 @@ function mkDog(o){
    }else{l.rotation.x=s*P+lie[i]*p;l.rotation.z=0}
   });
   const bounce=(NIGHT&&mv)?Math.abs(Math.sin(d.phase))*.07:0;
-  // khi lật ngửa (rl -> 1), nâng tâm B lên +0.58 để lưng nằm trên mặt đất thay vì chui xuống đất
   d.B.position.set(tremor,(-.24*p)*(1-rl)+.58*rl+bounce+hop+Math.abs(Math.sin(t*7))*.015*rl,lunge);
   d.B.rotation.x=(NIGHT&&mv)?Math.sin(d.phase)*.06:(d.act==='bite'?.14:0);
   d.B.rotation.z=Math.PI*rl;
