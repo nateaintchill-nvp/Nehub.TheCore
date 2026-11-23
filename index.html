@@ -493,10 +493,15 @@ document.head.appendChild(st);
 const wrap=document.createElement('div');wrap.id='s3d';wrap.appendChild(R.domElement);split.prepend(wrap);
 const ui=document.createElement('div');ui.id='s3d-ui';
 ui.className='absolute inset-0 z-20 pointer-events-none flex flex-col justify-end items-center text-center px-6';
-ui.innerHTML='<p id="s3d-hint" class="font-playfair italic text-sm md:text-lg text-gray-200 tracking-wide text-balance"></p>';
+ui.innerHTML='<p id="s3d-hint" class="font-playfair italic text-sm md:text-lg text-gray-100 tracking-wide text-balance" style="text-shadow:0 2px 12px rgba(0,0,0,.9)"></p>';
 ui.style.background='linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0) 32%,rgba(0,0,0,0) 62%,rgba(0,0,0,.6))';split.appendChild(ui);
 const tg=document.createElement('button');tg.type='button';tg.setAttribute('aria-label','Ngày / Đêm');tg.className='g3d-el g3d-top absolute left-4 z-30 font-inter text-xs text-gray-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 hover:border-vintage-gold backdrop-blur-md transition';tg.textContent='☀ / ☾';
 tg.onclick=()=>{const u=new URL(location.href);u.searchParams.set('mode',NIGHT?'day':'night');location.href=u};split.appendChild(tg);
+// lời nhắc (bong bóng thoại) bên cạnh nút ngày / đêm
+const sb=document.createElement('div');sb.setAttribute('aria-hidden','true');
+sb.className='g3d-el g3d-top absolute left-[5.4rem] z-30 pointer-events-none max-w-[calc(100vw-12rem)] rounded-xl border border-vintage-gold/40 bg-black/60 backdrop-blur-md px-3 py-1.5 font-playfair italic text-[11px] md:text-sm text-gray-100 leading-snug text-balance';
+sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/60 border-l border-b border-vintage-gold/40"></i>help us to shut the sun down!';
+split.appendChild(sb);
 const ov=document.createElement('div');ov.className='g3d-el absolute inset-0 z-[25] bg-black pointer-events-none';ov.style.opacity=0;split.appendChild(ov);
 const nt=document.createElement('div');nt.setAttribute('role','status');nt.setAttribute('aria-live','polite');
 nt.className='g3d-el absolute z-[28] inset-x-0 top-1/2 -translate-y-1/2 mx-auto w-[min(88vw,26rem)] text-center rounded-2xl border border-vintage-gold/40 bg-black/70 backdrop-blur-md px-6 py-5 font-playfair italic text-gray-100 text-base md:text-lg leading-relaxed text-balance opacity-0 pointer-events-none transition-opacity duration-500';split.appendChild(nt);
@@ -512,7 +517,8 @@ const qs=new URLSearchParams(location.search),hr=new Date().getHours(),mq=qs.get
 const NIGHT=mq==='night'||(mq!=='day'&&(hr>=18||hr<6)); // tự động: 6h-18h là ban ngày, còn lại là ban đêm (?mode=day / ?mode=night để xem thử)
 const K=NIGHT?{bg:['#04080e','#0d1b28'],fog:.026,hemi:.34,sun:.28,sunc:0x8fa8c8,exp:1.05}:{bg:['#86b9de','#e4eef1'],fog:.013,hemi:.95,sun:1.05,sunc:0xfff0d6,exp:1.08};
 R.toneMappingExposure=K.exp;
-ui.firstElementChild.textContent=NIGHT?'You need a drink now!':"Don't drink during the day, we need to work!";
+if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc "help us..."
+document.getElementById('s3d-hint').textContent=NIGHT?'You need a drink now!':"Don't drink during the day, we need to work!";
 const scene=new TH.Scene();
 {const c=document.createElement('canvas');c.width=2;c.height=256;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,K.bg[0]);g.addColorStop(1,K.bg[1]);x.fillStyle=g;x.fillRect(0,0,2,256);
  scene.background=new TH.CanvasTexture(c);scene.fog=new TH.FogExp2(new TH.Color(K.bg[1]),K.fog)}
@@ -651,7 +657,7 @@ plant(-5.3,.1,1.4,46,.5,.9,G1,.22);plant(-4.7,.9,1,30,.4,.8,G3,.18);plant(-3.2,-
 plant(1.35,-.3,1.2,26,.3,.9,G3,.18);plant(1.3,-1.8,1,22,.25,.9,G1,.17);plant(1.3,-3.8,1.2,24,.3,.9,G3,.18);plant(1.3,-6.5,1,22,.25,.8,G1,.17);plant(1.4,-9,1.2,24,.3,1,G3,.18);
 plant(2.9,-2.2,.8,18,.2,.6,G1,.15);plant(2.9,-7.5,.8,18,.2,.6,G3,.15);
 plant(-6,3.4,1.6,34,.5,.9,G2,.3);plant(-5.2,4,1.3,26,.4,.7,G2,.26);               // lá to (môn) phía trước
-hang(1.55,2.15,1.7,G2,1.3);hang(1.9,2,.2,G2,1.3);hang(-5.8,2.2,3,G2,1.6);hang(-.4,2.3,3.6,G2);
+hang(1.55,2.15,1.7,G2,1.3);hang(1.9,2,.2,G2,1.3);hang(-5.8,2.2,3,G2,1.6);   // (đã bỏ chậu treo che bảng ne'hub)
 bush(-8.2,0,-3,70,1.8,2.6,G1,.3);bush(-8,0,-9,50,1.5,2.2,G3,.28);
 /* ---- hàng rào lưới thép + tường block, dây leo phủ kín ---- */
 box(.22,.8,15.2,mat('#8a8985',500,1,6),3.2,.4,-4.6);
@@ -853,3 +859,4 @@ requestAnimationFrame(frame);
 </script>
 </body>
 </html>
+
