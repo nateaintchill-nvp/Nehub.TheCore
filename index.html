@@ -190,7 +190,7 @@ html.g3d #nehub,html.g3d #core{display:none!important}
           <input name="guest" type="text" required autocomplete="name" class="bk">
         </label>
         <label class="block font-inter text-sm text-gray-400"><span data-t>Số lượng người</span>
-          <input name="guests" type="number" min="1" max="30" inputmode="numeric" required class="bk">
+          <input name="guests" type="number" min="1" max="15" inputmode="numeric" required class="bk">
         </label>
         <label class="block font-inter text-sm text-gray-400"><span data-t>Ngày</span>
           <input name="date" type="date" required class="bk">
@@ -234,10 +234,10 @@ const split=$('split'),nehub=$('nehub'),core=$('core'),enter=$('enter'),site=$('
 
 /* ---------- Content ---------- */
 const story=[
- ['IMG_1794496966726_1794570706798.jpg','Vintage White Vespa','Chiếc Vespa Trắng Cổ Điển','Nằm ẩn mình trong góc khuất, chiếc Vespa màu trắng kem ánh lên dưới ngọn đèn vàng hắt ra từ bức tường thô ráp. Nó không còn bon bon trên những cung đường đầy cát của Mũi Né, mà dừng chân tại đây như một biểu tượng của những chuyến đi không hẹn ngày về, của sự tự do và phóng khoáng thập niên cũ.'],
- ['IMG_1794496966708_1794570706647.jpg','Classic Dial Phone','Cuộc Gọi Từ Quá Khứ','Dưới ngọn đèn chụp tỏa ánh sáng hổ phách, chiếc điện thoại quay số bằng nhựa đen bóng nằm lặng lẽ bên chai rượu rỗng. Không còn những tiếng chuông reo giật cục, nó giờ đây thu thập những tâm tư chưa nói, những lời thì thầm được gửi gắm vào không gian tĩnh lặng của quán.'],
  ['IMG_1794496966647_1794570706224.jpg','Retro Record Player','Giai Điệu Khép Kín','Âm thanh mộc mạc phát ra từ chiếc loa Marshall lấp đầy khoảng không. Kế bên là đầu đĩa than và chiếc vỏ bìa đĩa sờn góc <i>“Music for the Cocktail Hour”</i> của Frankie Carle. Những tiếng lạo xạo của kim than hòa cùng tiếng lanh canh của đá lạnh trong ly tạo nên một bản nhạc nền hoài niệm không thể tìm thấy ở bất kỳ nơi nào khác.'],
- ['IMG_1794496966781_1794570707293.jpg','The Core Bar Counter','Sau Mặt Quầy Gỗ Ấm','Dưới ánh đèn vàng trầm ấm, những hàng chai thủy tinh ánh lên sắc hổ phách trên kệ gỗ sẫm màu. Trên mặt quầy, bình lắc shaker, chiếc thìa khuấy cùng những chai Vermouth và Campari nằm lặng lẽ chờ đợi. Đó là nơi mọi cuộc trò chuyện bắt đầu—khi tiếng đá chạm thành ly khẽ vang lên, và mỗi ly cocktail được rót ra như một lời thủ thỉ dành riêng cho đêm muộn.']
+ ['IMG_1794496966781_1794570707293.jpg','The Core Bar Counter','Sau Mặt Quầy Gỗ Ấm','Dưới ánh đèn vàng trầm ấm, những hàng chai thủy tinh ánh lên sắc hổ phách trên kệ gỗ sẫm màu. Trên mặt quầy, bình lắc shaker, chiếc thìa khuấy cùng những chai Vermouth và Campari nằm lặng lẽ chờ đợi. Đó là nơi mọi cuộc trò chuyện bắt đầu—khi tiếng đá chạm thành ly khẽ vang lên, và mỗi ly cocktail được rót ra như một lời thủ thỉ dành riêng cho đêm muộn.'],
+ ['IMG_1794496966708_1794570706647.jpg','Classic Dial Phone','Cuộc Gọi Từ Quá Khứ','Dưới ngọn đèn chụp tỏa ánh sáng hổ phách, chiếc điện thoại quay số bằng nhựa đen bóng nằm lặng lẽ bên chai rượu rỗng. Không còn những tiếng chuông reo giật cục, nó giờ đây thu thập những tâm tư chưa nói, những lời thì thầm được gửi gắm vào không gian tĩnh lặng của quán.'],
+ ['IMG_1794496966726_1794570706798.jpg','Vintage White Vespa','Chiếc Vespa Trắng Cổ Điển','Nằm ẩn mình trong góc khuất, chiếc Vespa màu trắng kem ánh lên dưới ngọn đèn vàng hắt ra từ bức tường thô ráp. Nó không còn bon bon trên những cung đường đầy cát của Mũi Né, mà dừng chân tại đây như một biểu tượng của những chuyến đi không hẹn ngày về, của sự tự do và phóng khoáng thập niên cũ.']
 ];
 const renderStory=()=>$('story-list').innerHTML=story.map(([src,alt,h,p],i)=>`
  <div class="grid md:grid-cols-2 gap-8 md:gap-20 items-center reveal">
@@ -314,16 +314,16 @@ const renderMenu=()=>$('menu').innerHTML=menu.map(([t,s,it])=>`
 
 /* ---------- Language VI / EN ---------- */
 const SEN=[
- ['The Vintage White Vespa','Tucked away in a quiet corner, the cream-white Vespa glows under the golden lamp spilling off a rough wall. It no longer hums along the sandy roads of Mui Ne. It rests here as a symbol of trips with no return date, and of the free spirit of decades past.'],
- ['A Call from the Past','Beneath a lampshade casting amber light, a glossy black rotary phone sits quietly beside an empty bottle. It no longer rings sharply. Instead it gathers unspoken thoughts and whispers, entrusted to the still air of the bar.'],
  ['A Closed Melody','Rustic sound from a Marshall speaker fills the room. Beside it sit the turntable and a worn-cornered sleeve of <i>“Music for the Cocktail Hour”</i> by Frankie Carle. The crackle of the needle mixed with the clink of ice in a glass makes a nostalgic soundtrack you won\'t find anywhere else.'],
- ['Behind the Warm Wooden Bar','Under a dim golden glow, rows of glass bottles shimmer in amber tones along dark wooden shelves. Across the counter, cocktail shakers, bar spoons, and bottles of Vermouth and Campari sit quietly at the ready. It is where every conversation begins—when ice clinks softly against glass, and each poured drink feels like a secret whispered into the late night.']];
+ ['Behind the Warm Wooden Bar','Under a dim golden glow, rows of glass bottles shimmer in amber tones along dark wooden shelves. Across the counter, cocktail shakers, bar spoons, and bottles of Vermouth and Campari sit quietly at the ready. It is where every conversation begins—when ice clinks softly against glass, and each poured drink feels like a secret whispered into the late night.'],
+ ['A Call from the Past','Beneath a lampshade casting amber light, a glossy black rotary phone sits quietly beside an empty bottle. It no longer rings sharply. Instead it gathers unspoken thoughts and whispers, entrusted to the still air of the bar.'],
+ ['The Vintage White Vespa','Tucked away in a quiet corner, the cream-white Vespa glows under the golden lamp spilling off a rough wall. It no longer hums along the sandy roads of Mui Ne. It rests here as a symbol of trips with no return date, and of the free spirit of decades past.']];
 const EN={
  'Trở lại cổng':'Back to gate',"Bên cạnh ne'hub có một cánh cửa khác.":"Next door to ne'hub, there's another door.",'Cho những ai có duyên…':'For those meant to be here…','Gõ cửa để vào':'Knock to enter','Mũi Né, Việt Nam':'Mui Ne, Vietnam','Speakeasy Bar · Mũi Né':'Speakeasy Bar · Mui Ne',
  'Linh Hồn Của Thời Gian':'The Soul of Time',
  'Bên dưới ánh đèn mờ ảo, mỗi đồ vật tại The Core đều là một chứng nhân tĩnh lặng. Một bộ sưu tập ký ức được sắp đặt cẩn thận, chờ đợi những ai tinh tế lắng nghe.':'Under the dim light, every object at The Core is a silent witness. A carefully arranged collection of memories, waiting for those who listen closely.',
  'Đặt Chỗ':'Book a Table','Để chúng mình chuẩn bị trước chỗ ngồi nha.':'Let us get your seat ready.',
- 'Tên':'Name','Số lượng người':'Guests','Ngày':'Date','Giờ':'Time','Gửi đặt chỗ':'Send reservation',
+ 'Tên':'Name','Số lượng người':'Guests number','Ngày':'Date','Giờ':'Time','Gửi đặt chỗ':'Send reservation',
  'Thực Đơn':'Menu','Chất xúc tác cho những câu chuyện':'The catalyst for good stories',
  'Đậm đà • Đậm chất • Hương vị nồng nàn':'Rich • Bold • Full-bodied',
  'Chua dịu • Tươi mát • Dễ uống':'Tart • Fresh • Easy drinking',
@@ -338,7 +338,6 @@ const EN={
  'Tắt nhạc':'Music off','Bật nhạc':'Music on','Đang gửi…':'Sending…',
  'Cảm ơn bạn! Tụi mình đã nhận thông tin và sẽ giữ chỗ cho bạn.':'Thank you! We have your details and will hold your table.',
  'Chưa gửi được. Bạn thử lại hoặc':"Couldn't send. Please try again or",'gửi qua email':'email us',' nhé.':'.'};
-[story[0],story[2]]=[story[2],story[0]];[SEN[0],SEN[2]]=[SEN[2],SEN[0]];   // đổi chỗ nội dung 1 và 3 (cả bản EN)
 let lang='vi';
 try{lang=localStorage.getItem('lang')==='en'?'en':'vi'}catch(_){}
 const T=s=>lang==='en'&&EN[s]||s;
@@ -508,13 +507,21 @@ sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/68 b
 split.appendChild(sb);
 const ov=document.createElement('div');ov.className='g3d-el absolute inset-0 z-[25] bg-black pointer-events-none';ov.style.opacity=0;split.appendChild(ov);
 const nt=document.createElement('div');nt.setAttribute('role','status');nt.setAttribute('aria-live','polite');
-nt.className='g3d-el absolute z-[28] inset-x-0 top-1/2 -translate-y-1/2 mx-auto w-[min(88vw,26rem)] text-center rounded-2xl border border-vintage-gold/40 bg-black/70 backdrop-blur-md px-6 py-5 font-playfair italic text-gray-100 text-base md:text-lg leading-relaxed text-balance opacity-0 pointer-events-none transition-opacity duration-500';split.appendChild(nt);
+nt.className='g3d-el absolute z-[28] inset-x-0 top-1/2 -translate-y-1/2 mx-auto w-[min(88vw,26rem)] text-center rounded-2xl border border-vintage-gold/40 bg-black/75 backdrop-blur-md px-7 py-6 font-playfair italic text-gray-100 text-base md:text-lg leading-relaxed text-balance opacity-0 pointer-events-none transition-opacity duration-500';split.appendChild(nt);
 const CORE_NOTE="The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp bạn lúc đó…",NH_NOTE="ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…";
-let ntT;const show=(html,ms)=>{nt.innerHTML=html;nt.style.opacity=1;clearTimeout(ntT);ntT=setTimeout(()=>nt.style.opacity=0,ms)};
+let ntT;
+const hideNt=()=>{nt.style.opacity=0;nt.style.pointerEvents='none';clearTimeout(ntT)};
+const show=(html,ms)=>{
+ nt.innerHTML='<button type="button" id="nt-x" aria-label="Đóng" class="absolute top-2.5 right-3 w-7 h-7 flex items-center justify-center rounded-full text-gray-400 hover:text-vintage-gold hover:bg-white/10 transition not-italic font-sans text-lg leading-none">&times;</button><div class="pt-1">'+html+'</div>';
+ nt.style.opacity=1;nt.style.pointerEvents='auto';
+ const xb=$('nt-x');
+ if(xb){xb.onpointerdown=e=>e.stopPropagation();xb.onclick=e=>{e.stopPropagation();hideNt()}}
+ clearTimeout(ntT);ntT=setTimeout(hideNt,ms);
+};
 const note=m=>show(T(m),5000);
 const noteQ=()=>show('<span class="block not-italic font-montserrat font-light lowercase text-lg md:text-xl">“beautiful things come late in life,<span class="block mt-2">thanks for waiting for us…</span><span class="block mt-2 text-white font-medium">see you soon.”</span></span>'+(NIGHT?'<span class="block mt-4 not-italic font-inter font-light text-xs md:text-sm text-gray-400">'+T(NH_NOTE)+'</span>':''),6500);
 Object.assign(EN,{
- "The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp bạn lúc đó…":"We're open 8pm – 2am every night, see you then…",
+ "The Core mở cửa 20:00 – 02:00 mỗi đêm. Hẹn gặp bạn lúc đó…":"The Core is open 8pm – 2am every night, see you then…",
  "ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…":"ne'hub is closed for the night. See you in the morning…"
 });
 
@@ -524,6 +531,7 @@ const NIGHT=mq==='night'||(mq!=='day'&&(hr>=18||hr<6)); // tự động: 6h-18h 
 const K=NIGHT?{bg:['#04080e','#0d1b28'],fog:.026,hemi:.34,sun:.28,sunc:0x8fa8c8,exp:1.05}:{bg:['#86b9de','#e4eef1'],fog:.013,hemi:.95,sun:1.05,sunc:0xfff0d6,exp:1.08};
 R.toneMappingExposure=K.exp;
 if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc tắt nắng
+const dogs=[];
 window.sync3DLang=()=>{
  const en=lang==='en';
  const sbTxt=$('s3d-sb');
@@ -545,6 +553,7 @@ window.sync3DLang=()=>{
    ?'<span>Tap ☀ / ☾ top-left to shut the sun down</span><span class="mx-2 opacity-50">·</span><span>Drag to look around</span>'
    :'<span>Bấm ☀ / ☾ góc trái để tắt nắng</span><span class="mx-2 opacity-50">·</span><span>Kéo để nhìn quanh</span>';
  }
+ dogs.forEach(d=>{if(!d.act)d.drawBbl(d.getLabel(),d.o.bCol)});
 };
 window.sync3DLang();
 const scene=new TH.Scene();
@@ -887,10 +896,9 @@ if(NIGHT){updSnd();split.appendChild(snd);
  addEventListener('pointerdown',g1);addEventListener('pointerup',g1)}
 
 /* =========================================================
-   AKI (akita x shiba, to hơn, tai cụp - "Don't touch me": chạm vô cắn & gầm gừ)
-   CHI (chó cỏ Việt Nam, nhỏ hơn, tai dựng, vòng cổ xanh - "Touch my belly please!": chạm vô nằm ngửa & kêu ư ử)
+   AKI (akita x shiba, to hơn, tai cụp - "Đừng chạm vào tôi": chạm vô cắn & gầm gừ)
+   CHI (chó cỏ Việt Nam, nhỏ hơn, tai dựng, vòng cổ xanh - "Xoa bụng cho em đi!": chạm vô nằm ngửa & kêu ư ử)
    ========================================================= */
-const dogs=[];
 const gY=(x,z)=>(x>-6.05&&x<1.05&&z>-2&&z<.8)?.2:(x>-6.05&&x<1.05&&z>=.8&&z<1.25)?.1:.04;
 const angD=(a,b)=>{let d=b-a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d};
 const CHAIN=[[-1,.3],[-1,3.4],[2.07,3.4],[2.07,-2],[2.07,-6],[1.9,-10.2]];   // lối đi chung: hiên → sân → lối nhỏ → cửa The Core
@@ -932,7 +940,8 @@ function mkDog(o){
  // nhãn bong bóng cảnh báo / mời gọi phía trên đầu chó
  const bc=document.createElement('canvas');bc.width=460;bc.height=136;const bx2=bc.getContext('2d'),btx=new TH.CanvasTexture(bc);
  const bbl=new TH.Sprite(new TH.SpriteMaterial({map:btx,transparent:true,depthWrite:false,fog:false}));scene.add(bbl);
- let curTxt=o.label,curBd=o.bCol;
+ const getLabel=()=>lang==='en'?o.labelEn:o.labelVi;
+ let curTxt=getLabel(),curBd=o.bCol;
  const drawBbl=(txt,bd)=>{curTxt=txt;curBd=bd;const w=460,h=136,bh=104,r=26;
   bx2.clearRect(0,0,w,h);
   bx2.beginPath();bx2.moveTo(r,6);bx2.lineTo(w-r,6);bx2.quadraticCurveTo(w-6,6,w-6,r);bx2.lineTo(w-6,bh-r);bx2.quadraticCurveTo(w-6,bh,w-r,bh);
@@ -941,13 +950,13 @@ function mkDog(o){
   bx2.fillStyle='rgba(12,10,8,.86)';bx2.fill();bx2.lineWidth=4;bx2.strokeStyle=bd;bx2.stroke();
   bx2.fillStyle='#f8f5ec';bx2.textAlign='center';bx2.textBaseline='middle';bx2.font='italic 600 28px "Playfair Display",serif';
   bx2.fillText(txt,w/2,bh/2+2);btx.needsUpdate=true};
- drawBbl(o.label,o.bCol);FONTQ.push(()=>drawBbl(curTxt,curBd));
- const d={G,B,H,J,T,L,o,hit,bbl,drawBbl,x:0,z:0,y:.04,yaw:0,pose:0,phase:Math.random()*6,path:[],pi:0,state:'',t:0,spot:null,next:null,dur:15,faceTo:0,li:0,bn:0,legs:null,act:'',at:0};
+ drawBbl(curTxt,o.bCol);FONTQ.push(()=>drawBbl(curTxt,curBd));
+ const d={G,B,H,J,T,L,o,hit,bbl,drawBbl,getLabel,x:0,z:0,y:.04,yaw:0,pose:0,phase:Math.random()*6,path:[],pi:0,state:'',t:0,spot:null,next:null,dur:15,faceTo:0,li:0,bn:0,legs:null,act:'',at:0};
  d.zz=new TH.Sprite(new TH.SpriteMaterial({map:ZT,transparent:true,opacity:0,depthWrite:false,fog:false}));scene.add(d.zz);
  d.place=(x,z,yaw)=>{d.x=x;d.z=z;d.yaw=yaw;d.y=gY(x,z)};
  d.pet=()=>{
-  if(o.mode==='bite'){d.act='bite';d.at=0;d.drawBbl('GRRR!! *CHOMP*','#ff5252');growlBite()}
-  else{d.act='belly';d.at=d.act==='belly'?.35:0;d.drawBbl('Ư ử~ ♡ Hehe!','#ffb84d');whimper()}
+  if(o.mode==='bite'){d.act='bite';d.at=0;d.drawBbl(lang==='en'?'GRRR!! *CHOMP*':'GỪỪ!! *ĐỚP*','#ff5252');growlBite()}
+  else{d.act='belly';d.at=d.act==='belly'?.35:0;d.drawBbl(lang==='en'?'Whimper~ ♡ Hehe!':'Ư ử~ ♡ Hehe!','#ffb84d');whimper()}
  };
  d.follow=(dt,sp)=>{const P=d.path[d.pi];if(!P)return false;
   const dx=P[0]-d.x,dz=P[1]-d.z,dist=Math.hypot(dx,dz);
@@ -966,11 +975,11 @@ function mkDog(o){
    }else{
     lunge=.06;look=.24;tremor=Math.sin(t*58)*.016;
    }
-   if(d.at>=1.55){d.act='';d.drawBbl(o.label,o.bCol);if(NIGHT){d.state='run'}}
+   if(d.at>=1.55){d.act='';d.drawBbl(getLabel(),o.bCol);if(NIGHT){d.state='run'}}
   }else if(d.act==='belly'){
    d.at+=dt;d.pose=Math.max(0,d.pose-dt*3);
    rl=d.at<.45?ease(d.at/.45):(d.at>2.6?ease(Math.max(0,(3.1-d.at)/.5)):1);
-   if(d.at>=3.1){d.act='';d.drawBbl(o.label,o.bCol);if(NIGHT){d.state='run'}}
+   if(d.at>=3.1){d.act='';d.drawBbl(getLabel(),o.bCol);if(NIGHT){d.state='run'}}
   }else if(!NIGHT){
    if(d.state==='sleep'){d.pose=Math.min(1,d.pose+dt*1.6);d.t+=dt;
     if(d.t>=d.dur){const n=pickSpot(d);d.path=route(d.spot,n);d.pi=0;d.next=n;d.state='rise'}}
@@ -1013,8 +1022,8 @@ function mkDog(o){
   else zs.material.opacity=0;
  };
  return d}
-const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',label:"Aki: Don't touch me",bCol:'#ff7b6b'});
-const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',label:'Chi: Touch my belly please!',bCol:'#d4af37'});
+const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào tôi',labelEn:"Aki: Don't touch me",bCol:'#ff7b6b'});
+const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',labelVi:'Chi: Xoa bụng cho em đi!',labelEn:'Chi: Touch my belly please!',bCol:'#d4af37'});
 dogs.push(aki,chi);
 if(!NIGHT){[[aki,0,0,-.6],[chi,1,7.5,.8]].forEach(([d,i,t0,yw])=>{d.spot=SP[i];d.place(SP[i].p[0],SP[i].p[1],yw);d.pose=1;d.state='sleep';d.t=t0;d.dur=15})}
 else{aki.place(1.85,3.2,0);chi.place(2.4,3.5,0);
