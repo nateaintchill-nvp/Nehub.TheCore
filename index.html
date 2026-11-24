@@ -773,7 +773,7 @@ lamp(0xffb067,NIGHT?1.2:.4,8,BX,1.8,BZ+1.1);
 const nhSign=mkSign(1.3,.33,512,128,(g)=>{g.fillStyle='#122419';g.fillRect(0,0,512,128);g.strokeStyle='#e8dfc6';g.lineWidth=3;g.strokeRect(8,8,496,112);g.fillStyle='#e8dfc6';g.textAlign='center';g.font='600 54px "Playfair Display",serif';g.fillText("ne'hub",256,72);g.font='400 19px Montserrat,sans-serif';g.fillText('CO-WORKING SPACE',256,104)});
 nhSign.position.set(-.2,2.45,2.4);
 const doorNote=mkSign(.5,.625,320,400,(g)=>{g.fillStyle='#122419';g.fillRect(0,0,320,400);g.strokeStyle='#d4af37';g.lineWidth=4;g.strokeRect(12,12,296,376);
- g.fillStyle='#e8dfc6';g.textAlign='center';g.font='300 30px Montserrat,sans-serif';['beautiful things','come late in life,','thanks for waiting','for us…'].forEach((t,i)=>g.fillText(t,160,92+i*46));
+ g.fillStyle='#e8dfc6';g.textAlign='center';g.font='300 30px Montserrat,sans-serif';['beautiful things','come late in life,','thanks for visiting','us…'].forEach((t,i)=>g.fillText(t,160,92+i*46));
  g.font='500 32px Montserrat,sans-serif';g.fillStyle='#fff';g.fillText('see you soon.',160,308)});
 doorNote.position.set(-3.0,1.45,-1.84);
 
@@ -1022,8 +1022,8 @@ function mkDog(o){
   else zs.material.opacity=0;
  };
  return d}
-const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào tôi',labelEn:"Aki: Don't touch me",bCol:'#ff7b6b'});
-const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',labelVi:'Chi: Xoa bụng cho em đi!',labelEn:'Chi: Touch my belly please!',bCol:'#d4af37'});
+const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào con!!!',labelEn:"Aki: Don't touch me!!!",bCol:'#ff7b6b'});
+const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',labelVi:'Chi: Xoa bụng cho con điiii!!',labelEn:'Chi: Touch my belly please!!',bCol:'#d4af37'});
 dogs.push(aki,chi);
 if(!NIGHT){[[aki,0,0,-.6],[chi,1,7.5,.8]].forEach(([d,i,t0,yw])=>{d.spot=SP[i];d.place(SP[i].p[0],SP[i].p[1],yw);d.pose=1;d.state='sleep';d.t=t0;d.dur=15})}
 else{aki.place(1.85,3.2,0);chi.place(2.4,3.5,0);
