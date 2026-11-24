@@ -470,7 +470,7 @@ applyLang(true);
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
-<!-- Cổng 3D v3: Cổng sắt xanh navy (1/3 trái) + hàng rào cây xanh liền mạch (2/3 phải & hai bên), nhân vật bước vào sân như game -->
+<!-- Cổng 3D v3: Góc nhìn hẹp ngoài cổng -> mở rộng toàn cảnh khi vào sân vườn, lược giản cây cho thoáng -->
 <script>
 (()=>{
 const s=document.createElement('script');
@@ -574,7 +574,9 @@ window.sync3DLang();
 const scene=new TH.Scene();
 {const c=document.createElement('canvas');c.width=2;c.height=256;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,K.bg[0]);g.addColorStop(1,K.bg[1]);x.fillStyle=g;x.fillRect(0,0,2,256);
  scene.background=new TH.CanvasTexture(c);scene.fog=new TH.FogExp2(new TH.Color(K.bg[1]),K.fog)}
-const cam=new TH.PerspectiveCamera(50,W()/H(),.1,400);
+const OUT_FOV=38;
+const inFov=()=>W()/H()<1?68:64;
+const cam=new TH.PerspectiveCamera(OUT_FOV,W()/H(),.1,400);
 
 /* ---- helpers ---- */
 const V=(x,y,z)=>new TH.Vector3(x,y,z);
@@ -665,15 +667,13 @@ mkFenceSeg(FL+GW,FZ,FR,FZ);
 mkFenceSeg(FR,FZ,FR,-12.3);
 // 3) Hàng rào bên trái: nối liền góc (-6.4, 6.2) chạy dọc tới (-6.4, -10.0)
 mkFenceSeg(FL,FZ,FL,-10.0);
-// Phủ dây leo & bụi cây rậm rạp dọc hàng rào trước và hai bên hông để che khuôn viên sân vườn
-for(let i=0;i<260;i++)leaf(-3.1+Math.random()*6.3,.35+Math.random()*2.05,FZ-.12+(Math.random()-.5)*.28,.2,.05,.26,G3[Math.random()*4|0]);
-for(let i=0;i<340;i++)leaf(FR-.12+(Math.random()-.5)*.28,.4+Math.random()*2.1,FZ-Math.random()*18.3,.18,.05,.24,G3[Math.random()*4|0]);
-for(let i=0;i<210;i++)leaf(FL+.12+(Math.random()-.5)*.28,.4+Math.random()*2.1,FZ-Math.random()*15.8,.18,.05,.24,G1[Math.random()*3|0]);
-// Bụi cây cảnh sát mặt trong hàng rào trước (che bớt tầm nhìn từ ngoài đường)
-bush(-2.4,0,5.55,48,.7,1.8,G1,.26);
-bush(-.8,0,5.6,55,.85,2.0,G3,.28);
-bush(.8,0,5.55,50,.8,1.9,G1,.27);
-bush(2.3,0,5.6,45,.7,1.8,G3,.25);
+// Dây leo & bụi cây được tỉa gọn để khuôn viên sân vườn bên trong thoáng, dễ nhìn
+for(let i=0;i<150;i++)leaf(-3.1+Math.random()*6.3,.35+Math.random()*1.95,FZ-.12+(Math.random()-.5)*.22,.17,.04,.22,G3[Math.random()*4|0]);
+for(let i=0;i<200;i++)leaf(FR-.12+(Math.random()-.5)*.22,.4+Math.random()*2.0,FZ-Math.random()*18.3,.16,.04,.22,G3[Math.random()*4|0]);
+for(let i=0;i<120;i++)leaf(FL+.12+(Math.random()-.5)*.22,.4+Math.random()*2.0,FZ-Math.random()*15.8,.16,.04,.22,G1[Math.random()*3|0]);
+// 2 bụi cây cảnh thấp gọn sát góc hàng rào trước
+bush(-1.6,0,5.7,26,.55,1.25,G1,.2);
+bush(1.9,0,5.7,26,.55,1.25,G3,.2);
 
 /* =========================================================
    CÁNH CỔNG SẮT MÀU XANH NAVY (1/3 bên trái: x từ -6.4 đến -3.2 tại z=6.2)
@@ -795,19 +795,18 @@ chair(-3.2,1.9,.12);chair(-2.2,1.9,-.1);
 box(.4,.08,.3,flat('#e9eef0'),-3.2,.58,1.95);box(.36,.08,.3,flat('#e8a8b8'),-2.2,.58,1.95);   // áo khoác trắng, khăn hồng
 cyl(.4,.4,.2,flat('#151515'),-2.6,.1,3.1);cyl(.4,.4,.2,flat('#151515'),-2.6,.3,3.1);cyl(.48,.48,.06,flat('#9a7048'),-2.6,.43,3.1);
 
-/* ---- cây cảnh, chậu treo ---- */
-plant(-5.3,.1,1.4,46,.5,.9,G1,.22);plant(-4.7,.9,1,30,.4,.8,G3,.18);plant(-3.2,-1.4,1,30,.4,.9,G1,.17);plant(.55,1.1,1.5,44,.45,1.1,G1,.2);
-plant(1.35,-.3,1.2,26,.3,.9,G3,.18);plant(1.3,-1.8,1,22,.25,.9,G1,.17);plant(1.3,-3.8,1.2,24,.3,.9,G3,.18);plant(1.3,-6.5,1,22,.25,.8,G1,.17);plant(1.4,-9,1.2,24,.3,1,G3,.18);
-plant(2.9,-2.2,.8,18,.2,.6,G1,.15);plant(2.9,-7.5,.8,18,.2,.6,G3,.15);
-plant(-5.8,3.6,1.6,34,.5,.9,G2,.3);plant(-5.1,4.2,1.3,26,.4,.7,G2,.26);               // lá to (môn) phía trước
-hang(1.55,2.15,1.7,G2,1.3);hang(1.9,2,.2,G2,1.3);hang(-5.8,2.2,3,G2,1.6);
-bush(-8.2,0,-3,70,1.8,2.6,G1,.3);bush(-8,0,-9,50,1.5,2.2,G3,.28);
+/* ---- cây cảnh điểm nhấn (đã lược giản cho thoáng sân & lối vào The Core) ---- */
+plant(-5.4,.2,1.25,30,.42,.8,G1,.2);plant(-4.8,1.0,.95,22,.32,.7,G3,.17);plant(.55,1.1,1.3,30,.38,.95,G1,.18);
+plant(1.35,-.6,1.0,18,.24,.8,G3,.16);plant(1.35,-4.8,1.0,18,.24,.8,G1,.16);plant(1.35,-8.8,1.1,20,.26,.9,G3,.17);
+plant(-5.8,3.6,1.35,22,.42,.75,G2,.25);
+hang(-5.6,2.3,2.2,G2,1.35);
+bush(-8.0,0,-3,42,1.5,2.2,G1,.28);bush(-7.8,0,-9,32,1.3,1.9,G3,.26);
 [-1,-3.6,-6.2].forEach(z=>cyl(.04,.04,1.2,flat('#eeeeea'),3.05,.6,z));                 // ống PVC
 [0,1,2].forEach(i=>box(.4,.2,.2,flat('#8a8985'),3.0,.1+i*.2,-1.5));                    // gạch block
-// cây thấp sát hàng rào, tán vươn qua lối đi và phủ lên mái nhà
-limb([3.75,0,-3.2],[3.8,3,-3.3],.3);limb([3.8,2.9,-3.3],[1.6,4.2,-4.4],.15);limb([3.8,3,-3.3],[2.3,3.9,-1.6],.12);limb([3.8,3,-3.3],[5.2,4.3,-5],.13);limb([2.4,4.1,-4.3],[.5,4.5,-5.6],.08);
-for(let i=0,n=0;n<430&&i<5000;i++){const x=(Math.random()*2-1),y=(Math.random()*2-1),z=(Math.random()*2-1);if(x*x+y*y+z*z>1)continue;n++;
- leaf(2.6+x*3,4.5+y*.75,-4+z*4.6,.4,.07,.22,G3[Math.random()*4|0])}
+// cây thấp sát hàng rào, tán cao thoáng vươn nhẹ lên mái nhà
+limb([3.75,0,-3.2],[3.8,3.2,-3.3],.28);limb([3.8,3.1,-3.3],[1.7,4.5,-4.4],.14);limb([3.8,3.1,-3.3],[2.4,4.2,-1.8],.11);limb([3.8,3.1,-3.3],[5.2,4.5,-5],.12);
+for(let i=0,n=0;n<210&&i<3500;i++){const x=(Math.random()*2-1),y=(Math.random()*2-1),z=(Math.random()*2-1);if(x*x+y*y+z*z>1)continue;n++;
+ leaf(2.7+x*2.8,4.8+y*.65,-4+z*4.2,.36,.06,.2,G3[Math.random()*4|0])}
 
 /* =========================================================
    THE CORE: căn nhà nhỏ núp sau ne'hub, cuối lối nhỏ (không vượt hàng rào x=3.2)
@@ -949,12 +948,10 @@ const sfx=fn=>{if((auto&&!SND)||!live())return;try{ensureAC();if(mg)mg.gain.valu
 // Tiếng mở chốt + cổng sắt trượt trên thanh ray
 const gateSlideSfx=()=>sfx(()=>{
  const t0=ac.currentTime;
- // tiếng lách cách mở chốt khóa
  const lo=ac.createOscillator(),lg=ac.createGain();
  lo.type='triangle';lo.frequency.setValueAtTime(680,t0);lo.frequency.exponentialRampToValueAtTime(190,t0+.07);
  lg.gain.setValueAtTime(.25,t0);lg.gain.exponentialRampToValueAtTime(.001,t0+.08);
  lo.connect(lg);lg.connect(mg);lo.start(t0);lo.stop(t0+.09);
- // tiếng bánh xe sắt lăn trên ray (1.2s)
  const dur=1.25,buf=ac.createBuffer(1,Math.floor(ac.sampleRate*dur),ac.sampleRate),d=buf.getChannelData(0);
  for(let i=0;i<d.length;i++){const mod=.65+.35*Math.sin(i/ac.sampleRate*95);d[i]=(Math.random()*2-1)*mod}
  const ns=ac.createBufferSource(),bp=ac.createBiquadFilter(),ng=ac.createGain();
@@ -1140,16 +1137,16 @@ function mkDog(o){
   else zs.material.opacity=0;
  };
  return d}
-const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào con nha!!!',labelEn:"Aki: Hi, Don't touch me!!!",bCol:'#ff7b6b'});
-const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',labelVi:'Chi: Xoa bụng cho con đi!!!',labelEn:'Chi: Touch my belly please!!!',bCol:'#d4af37'});
+const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào con nha!',labelEn:"Aki: Don't touch me!",bCol:'#ff7b6b'});
+const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',labelVi:'Chi: Xoa bụng cho con đi!',labelEn:'Chi: Touch my belly please!',bCol:'#d4af37'});
 dogs.push(aki,chi);
 if(!NIGHT){[[aki,0,0,-.6],[chi,1,7.5,.8]].forEach(([d,i,t0,yw])=>{d.spot=SP[i];d.place(SP[i].p[0],SP[i].p[1],yw);d.pose=1;d.state='sleep';d.t=t0;d.dur=15})}
 else{aki.place(1.85,3.2,0);chi.place(2.4,3.5,0);
  [aki,chi].forEach((d,i)=>{d.legs=mkLegs(i?.3:-.25);d.speed=i?4:3.4;d.gap=i?.4:.55;d.delay=i?1:.1;d.state='wait';d.t=0})}
 
-/* ---- camera + điều khiển (ngoài cổng -> kéo cổng trượt sang phải -> đi bộ vào sân -> vào hẻm The Core) ---- */
-const outBase=()=>W()/H()<1?{p:V(-1.6,1.72,22.2),l:V(-1.6,1.5,6.2)}:{p:V(-1.6,1.72,15.6),l:V(-1.6,1.55,6.2)};
-const inBase=()=>W()/H()<1?{p:V(-1.2,1.72,4.4),l:V(.4,1.75,-6.5)}:{p:V(-1.8,1.7,3.9),l:V(.2,1.75,-6.5)};
+/* ---- camera + điều khiển (ngoài cổng hẹp -> kéo cổng trượt sang phải -> mở rộng góc nhìn khi vào sân) ---- */
+const outBase=()=>W()/H()<1?{p:V(-1.6,1.72,25.5),l:V(-1.6,1.45,6.2)}:{p:V(-1.6,1.72,19.2),l:V(-1.6,1.5,6.2)};
+const inBase=()=>W()/H()<1?{p:V(-1.4,1.72,5.0),l:V(.2,1.65,-6.5)}:{p:V(-1.6,1.72,4.7),l:V(.1,1.68,-6.5)};
 const base=()=>stage==='outside'?outBase():inBase();
 
 let yaw=0,pit=0,ty=0,tp=0,t0=0,P0,L0,CRV,curL=outBase().l,drag=null,mxT=0,myT=0,mx=0,my=0,gxT=0,gyT=0,gx=0,gy=0,gb=null,askedG=0;
@@ -1169,7 +1166,7 @@ const hitTarget=e=>{
  const hh=ray.intersectObjects([hitCore,hitNh])[0];return hh?(hh.object===hitNh?'nh':'core'):null;
 };
 
-// Kéo cổng sắt xanh navy sang phải & nhân vật tự động đi bộ vào sân vườn
+// Kéo cổng sắt xanh navy sang phải & nhân vật tự động đi bộ vào sân vườn (mở rộng góc nhìn)
 function enterYard(){
  if(stage!=='outside')return;
  stage='entering';t0=performance.now();lastStep=0;
@@ -1178,21 +1175,21 @@ function enterYard(){
  const dest=inBase().p;
  CRV=new TH.CatmullRomCurve3([
   P0,
-  V(-4.1,1.70,9.5),
+  V(-4.1,1.70,10.5),
   V(-4.75,1.68,6.2),   // đi thẳng qua khoảng cổng 1/3 bên trái vừa kéo mở
-  V(-3.3,1.68,4.6),
+  V(-3.3,1.68,5.1),
   dest
  ]);
  ty=tp=yaw=pit=0;
  ui.style.opacity=0;wrap.style.cursor='default';
 }
 
-// Quay ra lại ngoài cổng (đóng cổng lại để có thể tương tác lại)
+// Quay ra lại ngoài cổng (đóng cổng lại & thu hẹp góc nhìn ngoài đường)
 function exitYard(){
  if(stage!=='inside')return;
  hideNt();
  stage='outside';gateTarget=0;gateSlideSfx();
- ty=tp=yaw=pit=0;
+ ty=cl(ty,-.35,.35);tp=cl(tp,-.2,.22);
  window.sync3DLang();ui.style.opacity=1;wrap.style.cursor='grab';
 }
 outBtn.onclick=exitYard;
@@ -1227,7 +1224,10 @@ addEventListener('pointermove',e=>{
  if(!drag&&stage!=='entering'&&stage!=='alley'&&e.pointerType==='mouse'){mxT=e.clientX/innerWidth-.5;myT=e.clientY/innerHeight-.5}
  if(!drag||stage==='entering'||stage==='alley')return;
  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m=Math.max(drag.m,Math.abs(dx)+Math.abs(dy));
- ty=cl(ty-dx/W()*1.6,-.6,.6);tp=cl(tp+dy/H()*.8,-.3,.3);drag.x=e.clientX;drag.y=e.clientY});
+ const maxY=stage==='outside'?.35:1.05,maxP=stage==='outside'?.22:.38;
+ ty=cl(ty-dx/W()*(stage==='outside'?1.1:2.2),-maxY,maxY);
+ tp=cl(tp+dy/H()*(stage==='outside'?.6:1.0),-maxP,maxP);
+ drag.x=e.clientX;drag.y=e.clientY});
 addEventListener('pointerup',e=>{if(drag&&drag.m<6&&e.target===R.domElement){askGyro();act(hitTarget(e))}drag=null});
 addEventListener('deviceorientation',e=>{if(e.gamma==null||e.beta==null)return;if(gb===null)gb=e.beta;gxT=cl(e.gamma/25,-1,1);gyT=cl((e.beta-gb)/25,-1,1)});
 wrap.addEventListener('pointermove',e=>{if(drag||stage==='entering'||stage==='alley')return;const k=hitTarget(e);wrap.style.cursor=k?'pointer':'grab'});
@@ -1240,7 +1240,7 @@ cam.aspect=W()/H();cam.updateProjectionMatrix();
 
 // nút "Trở lại cổng" từ bên trong trang The Core → quay về cảnh 3D
 const ob=document.getElementById('back'),oldBack=ob.onclick;
-ob.onclick=()=>{oldBack();stage='inside';gateTarget=1;gateSlide=1;gateG.position.x=GX1;ov.style.opacity=0;window.sync3DLang();ui.style.opacity=1;wrap.style.cursor='grab';ty=tp=yaw=pit=0;doorG.rotation.y=0;cam.fov=50;cam.updateProjectionMatrix();
+ob.onclick=()=>{oldBack();stage='inside';gateTarget=1;gateSlide=1;gateG.position.x=GX1;ov.style.opacity=0;window.sync3DLang();ui.style.opacity=1;wrap.style.cursor='grab';ty=tp=yaw=pit=0;doorG.rotation.y=0;cam.fov=inFov();cam.updateProjectionMatrix();
  split.style.transition='none';split.style.opacity=0;split.style.display='flex';
  document.body.classList.add('overflow-hidden');fit();
  requestAnimationFrame(()=>requestAnimationFrame(()=>{split.style.transition='opacity .7s ease';split.style.opacity=1}))};
@@ -1262,12 +1262,21 @@ function frame(now){
  // Camera & chuyển động nhân vật như trong game
  if(stage==='outside'||stage==='inside'){
   mx+=(mxT-mx)*.05;my+=(myT-my)*.05;gx+=(gxT-gx)*.08;gy+=(gyT-gy)*.08;
-  yaw+=(ty-yaw)*.06;pit+=(tp-pit)*.06;
+  yaw+=(ty-yaw)*.07;pit+=(tp-pit)*.07;
   const B=base();
-  const sx=stage==='outside'?3.5:5.5;
-  cam.position.set(B.p.x+yaw*sx+mx*.65+gx*.45+Math.sin(t*.25)*.22,B.p.y+pit*1.8-my*.22+gy*.18+Math.sin(t*.4)*.03,B.p.z);
-  curL=B.l.clone();curL.x+=yaw*2.2+mx*.9+gx*.8;curL.y+=pit*1.8-my*.32;cam.lookAt(curL);
-  if(Math.abs(cam.fov-50)>.05){cam.fov+=(50-cam.fov)*Math.min(1,dt*4);cam.updateProjectionMatrix()}
+  if(stage==='outside'){
+   cam.position.set(B.p.x+yaw*2.8+mx*.5+gx*.35+Math.sin(t*.25)*.16,B.p.y+pit*1.4-my*.18+gy*.14+Math.sin(t*.4)*.025,B.p.z);
+   curL=B.l.clone();curL.x+=yaw*1.8+mx*.7+gx*.6;curL.y+=pit*1.4-my*.25;
+  }else{
+   // Đứng trong sân vườn: xoay đầu rộng để quan sát toàn cảnh ne'hub, sân vườn và lối vào The Core
+   cam.position.set(B.p.x+yaw*1.6+mx*.45+gx*.35+Math.sin(t*.25)*.14,B.p.y+pit*1.1-my*.18+gy*.14+Math.sin(t*.4)*.025,B.p.z);
+   const r=11,baseAng=Math.atan2(B.l.x-B.p.x,B.p.z-B.l.z);
+   const a=baseAng-yaw*1.15-mx*.45-gx*.4;
+   curL.set(cam.position.x+Math.sin(a)*r,B.l.y+pit*3.2-my*.6-gy*.5,cam.position.z-Math.cos(a)*r);
+  }
+  cam.lookAt(curL);
+  const targetFov=stage==='outside'?OUT_FOV:inFov();
+  if(Math.abs(cam.fov-targetFov)>.05){cam.fov+=(targetFov-cam.fov)*Math.min(1,dt*3.5);cam.updateProjectionMatrix()}
  }else if(stage==='entering'){
   const el=now-t0;
   // đợi 0.45s cho cánh cổng sắt bắt đầu kéo sang phải rồi nhân vật mới bước vào
@@ -1283,6 +1292,9 @@ function frame(now){
   const lookTarget=inBase().l;
   curL=L0.clone().lerp(lookTarget,ease(cl(el/3850,0,1)));
   cam.lookAt(curL);
+  // Mở rộng dần góc nhìn từ hẹp (38°) sang rộng toàn cảnh (64°/68°) khi bước qua cổng
+  cam.fov=OUT_FOV+(inFov()-OUT_FOV)*e;
+  cam.updateProjectionMatrix();
   if(u>=1){
    stage='inside';
    window.sync3DLang();
@@ -1297,7 +1309,7 @@ function frame(now){
   const stepIdx=Math.floor(stepPhase/Math.PI);
   if(stepIdx>lastStep){lastStep=stepIdx;stepSfx()}
   curL=L0.clone().lerp(LD,Math.min(1,e*1.5));cam.lookAt(curL);
-  cam.fov=50-6*e;cam.updateProjectionMatrix();
+  cam.fov=inFov()-10*e;cam.updateProjectionMatrix();
   doorG.rotation.y=ease(cl((u-.5)/.28,0,1))*1.5;
   if(u>.78)ov.style.opacity=(u-.78)/.22;
   if(u>=1){stage='inside';openCore()}
