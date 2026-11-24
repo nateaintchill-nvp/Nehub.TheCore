@@ -236,7 +236,7 @@ const split=$('split'),nehub=$('nehub'),core=$('core'),enter=$('enter'),site=$('
 const story=[
  ['IMG_1794496966726_1794570706798.jpg','Vintage White Vespa','Chiếc Vespa Trắng Cổ Điển','Nằm ẩn mình trong góc khuất, chiếc Vespa màu trắng kem ánh lên dưới ngọn đèn vàng hắt ra từ bức tường thô ráp. Nó không còn bon bon trên những cung đường đầy cát của Mũi Né, mà dừng chân tại đây như một biểu tượng của những chuyến đi không hẹn ngày về, của sự tự do và phóng khoáng thập niên cũ.'],
  ['IMG_1794496966708_1794570706647.jpg','Classic Dial Phone','Cuộc Gọi Từ Quá Khứ','Dưới ngọn đèn chụp tỏa ánh sáng hổ phách, chiếc điện thoại quay số bằng nhựa đen bóng nằm lặng lẽ bên chai rượu rỗng. Không còn những tiếng chuông reo giật cục, nó giờ đây thu thập những tâm tư chưa nói, những lời thì thầm được gửi gắm vào không gian tĩnh lặng của quán.'],
- ['IMG_1794496966647_1794570706224.jpg','Retro Record Player','Giai Điệu Khép Kín','Âm thanh mộc mạc phát ra từ chiếc loa Marshall lấp đầy khoảng không. Kế bên là đầu đĩa than và chiếc vỏ bìa đĩa sờn góc <i>“Music for the Cocktail Hour”</i> của Frankie Carle. Những tiếng lạo xạo của kim than hòa cùng tiếng lanh canh của đá lạnh trong ly tạo nên một bản nhạc nền hoài niệm không thể tìm thấy ở bất kỳ nơi nào khác.']
+ ['IMG_1794496966610_1794570706029.jpg','Retro Record Player','Giai Điệu Khép Kín','Âm thanh mộc mạc phát ra từ chiếc loa Marshall lấp đầy khoảng không. Kế bên là đầu đĩa than và chiếc vỏ bìa đĩa sờn góc <i>“Music for the Cocktail Hour”</i> của Frankie Carle. Những tiếng lạo xạo của kim than hòa cùng tiếng lanh canh của đá lạnh trong ly tạo nên một bản nhạc nền hoài niệm không thể tìm thấy ở bất kỳ nơi nào khác.']
 ];
 const renderStory=()=>$('story-list').innerHTML=story.map(([src,alt,h,p],i)=>`
  <div class="grid md:grid-cols-2 gap-8 md:gap-20 items-center reveal">
@@ -336,6 +336,7 @@ const EN={
  'Tắt nhạc':'Music off','Bật nhạc':'Music on','Đang gửi…':'Sending…',
  'Cảm ơn bạn! Tụi mình đã nhận thông tin và sẽ giữ chỗ cho bạn.':'Thank you! We have your details and will hold your table.',
  'Chưa gửi được. Bạn thử lại hoặc':"Couldn't send. Please try again or",'gửi qua email':'email us',' nhé.':'.'};
+[story[0],story[2]]=[story[2],story[0]];[SEN[0],SEN[2]]=[SEN[2],SEN[0]];   // đổi chỗ nội dung 1 và 3 (cả bản EN)
 let lang='vi';
 try{lang=localStorage.getItem('lang')==='en'?'en':'vi'}catch(_){}
 const T=s=>lang==='en'&&EN[s]||s;
@@ -350,49 +351,48 @@ function applyLang(first){
 }
 document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=lang==='en'?'vi':'en';try{localStorage.setItem('lang',lang)}catch(_){}applyLang(false)});
 
-/* ---------- Music: mp3 nếu có, không thì noir-jazz swing tổng hợp ---------- */
+/* ---------- Music: mp3 nếu có, không thì noir-jazz lounge tổng hợp ---------- */
 let ctx,synth,playing=false;
 const hz=n=>440*2**((n-69)/12);
-const CH=[ // [bass, hợp âm, quãng 3] Am9 | Dm7 | Bm7b5 | E7b9 | Am9 | F7 | Bm7b5 | E7b9
- [45,[55,59,64,72],3],[50,[53,57,60,64],3],[47,[57,62,65,69],3],[52,[56,62,65,68],4],
- [45,[55,59,64,72],3],[53,[57,63,67,69],4],[47,[57,62,65,69],3],[52,[56,62,65,68],4]];
+const CH=[ // [bass, hợp âm]  Cmaj9 | Am9 | Dm9 | G13 | Cmaj9 | Fmaj9 | Dm9 | G13  (jazz lounge ấm, không còn hợp âm thứ u ám)
+ [48,[55,59,62,64]],[45,[55,59,60,64]],[50,[53,57,60,64]],[43,[59,62,64,65]],
+ [48,[55,59,62,64]],[41,[57,60,64,67]],[50,[53,57,60,64]],[43,[59,62,64,65]]];
 function startSynth(){
  ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
  if(ctx.state==='suspended')ctx.resume();
- const out=ctx.createGain();out.gain.value=.85;
- const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=4800;lp.connect(ctx.destination);
- const dl=ctx.createDelay();dl.delayTime.value=.24;
- const fb=ctx.createGain();fb.gain.value=.25;
- const dlp=ctx.createBiquadFilter();dlp.type='lowpass';dlp.frequency.value=2000;
- out.connect(lp);out.connect(dl);dl.connect(dlp);dlp.connect(fb);fb.connect(dl);dlp.connect(lp);
- const len=ctx.sampleRate*2,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
- for(let i=0;i<len;i++)d[i]=Math.random()<.0007?(Math.random()*2-1):(Math.random()*2-1)*.006; // sạn đĩa than
- const bed=ctx.createBufferSource();bed.buffer=buf;bed.loop=true;
- const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1500;
- bed.connect(hp).connect(out);bed.start();
- const tone=(t,n,g,dur,type='sine')=>{
-  const o=ctx.createOscillator(),e=ctx.createGain();
-  o.type=type;o.frequency.value=hz(n);
-  e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(g,t+.006);e.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  o.connect(e).connect(out);o.start(t);o.stop(t+dur+.05);};
- const hit=(t,f,g,dur,q=1.2)=>{
-  const s=ctx.createBufferSource(),b=ctx.createBiquadFilter(),e=ctx.createGain();
-  s.buffer=buf;b.type='bandpass';b.frequency.value=f;b.Q.value=q;
-  e.gain.setValueAtTime(g,t);e.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  s.connect(b).connect(e).connect(out);s.start(t,Math.random());s.stop(t+dur+.02);};
- const sd=60/128/2;let step=0,next=ctx.currentTime+.15;
- const bar=(s,t)=>{
-  const bi=(s>>3)%8,c=CH[bi],nx=CH[(bi+1)%8],ls=s%8;
-  if(ls%2===0){ // bass đi bộ: gốc – quãng 3 – quãng 5 – nốt dẫn
-   const w=[c[0],c[0]+c[2],c[0]+7,nx[0]-1][ls/2];
-   tone(t,w,.24,.4,'triangle');tone(t,w,.12,.4);}
-  if([0,2,3,4,6,7].includes(ls))hit(t,7500,ls%2?.07:.11,.09,.8); // ride swing
-  if(ls===2||ls===6)hit(t,3500,.06,.05); // hi-hat chân + chổi
-  if(ls===0||ls===3||(ls===7&&Math.random()<.4)) // piano stab
-   c[1].forEach((n,i)=>{tone(t+i*.008,n,.045,.45);tone(t+i*.008,n+12,.01,.2,'triangle');});
-  if(s%2&&Math.random()<.22)tone(t,c[1][Math.floor(Math.random()*4)]+12,.032,.8); // chuông vibraphone
+ const sr=ctx.sampleRate,out=ctx.createGain();out.gain.value=.9;
+ const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;lp.Q.value=.5;       // cắt bớt âm chói
+ const warm=ctx.createBiquadFilter();warm.type='lowshelf';warm.frequency.value=220;warm.gain.value=3; // dày, ấm
+ lp.connect(warm);warm.connect(ctx.destination);
+ const il=Math.floor(sr*2.4),imp=ctx.createBuffer(2,il,sr);                                          // reverb phòng sang
+ for(let c=0;c<2;c++){const d=imp.getChannelData(c);for(let i=0;i<il;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/il,2.6)}
+ const rv=ctx.createConvolver();rv.buffer=imp;const wet=ctx.createGain();wet.gain.value=.3;
+ out.connect(lp);out.connect(rv);rv.connect(wet);wet.connect(lp);
+ const nz=ctx.createBuffer(1,sr,sr),nd=nz.getChannelData(0);for(let i=0;i<sr;i++)nd[i]=Math.random()*2-1;
+ const cb=ctx.createBuffer(1,sr*2,sr),cd=cb.getChannelData(0);                                       // sạn đĩa than rất nhẹ
+ for(let i=0;i<cd.length;i++)cd[i]=Math.random()<.0004?(Math.random()*2-1)*.25:(Math.random()*2-1)*.0025;
+ const bed=ctx.createBufferSource();bed.buffer=cb;bed.loop=true;
+ const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1200;
+ const bg=ctx.createGain();bg.gain.value=.6;bed.connect(hp);hp.connect(bg);bg.connect(out);bed.start();
+ const note=(t,n,g,dur,type,atk=.012)=>{const o=ctx.createOscillator(),e=ctx.createGain();o.type=type;o.frequency.value=hz(n);
+  e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(g,t+atk);e.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(e);e.connect(out);o.start(t);o.stop(t+dur+.05)};
+ const keys=(t,n,g)=>{note(t,n,g,1.6,'sine');note(t,n+12,g*.22,.7,'sine');note(t,n+24,g*.05,.25,'sine')};   // đàn Rhodes mềm
+ const brush=(t,f,g,dur)=>{const s=ctx.createBufferSource(),b=ctx.createBiquadFilter(),e=ctx.createGain();s.buffer=nz;b.type='bandpass';b.frequency.value=f;b.Q.value=.7;
+  e.gain.setValueAtTime(.0001,t);e.gain.linearRampToValueAtTime(g,t+.01);e.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  s.connect(b);b.connect(e);e.connect(out);s.start(t,Math.random()*.5);s.stop(t+dur+.02)};                // trống chổi quét
+ const sd=60/72/2;let step=0,next=ctx.currentTime+.2;                                                 // 72 BPM, thong thả
+ const bar=(s,t)=>{const bi=(s>>3)%8,c=CH[bi],nx=CH[(bi+1)%8],ls=s%8;
+  if(ls===0){note(t,c[0],.2,1.1,'triangle',.02);note(t,c[0],.1,1.1,'sine',.02);                        // bass ấm
+   c[1].forEach(n=>note(t,n-12,.016,sd*8,'sine',.7))}                                                  // nền dàn dây mỏng
+  if(ls===4)note(t,c[0]+7,.14,.7,'triangle',.02);
+  if(ls===6)note(t,nx[0]+(nx[0]>c[0]?-1:1),.11,.4,'triangle',.02);                                     // nốt dẫn
+  if(ls===0||ls===3||(ls===5&&Math.random()<.5))c[1].forEach((n,i)=>keys(t+i*.014,n,.04));            // hợp âm rải nhẹ
+  if(ls===2||ls===6)brush(t,2800,.035,.22);
+  if(ls%2&&Math.random()<.5)brush(t,6500,.014,.07);
+  if((ls===3||ls===5||ls===7)&&Math.random()<.4)keys(t,c[1][Math.floor(Math.random()*4)]+12,.03);     // giai điệu thưa
  };
- const sched=()=>{while(next<ctx.currentTime+.3){bar(step,next+(step%2?sd*.34:0));next+=sd;step++}};
+ const sched=()=>{while(next<ctx.currentTime+.3){bar(step,next+(step%2?sd*.3:0));next+=sd;step++}};
  sched();synth={out,bed,timer:setInterval(sched,70)};
 }
 function stopSynth(){if(!synth)return;clearInterval(synth.timer);synth.bed.stop();synth.out.disconnect();synth=null}
@@ -531,7 +531,7 @@ window.sync3DLang=()=>{
  if(NIGHT){
   hEl.innerHTML=en
    ?"Need a drink right now?<br>Ask Aki &amp; Chi, they'll show you the way!"
-   :"Bạn đang cần một ly?<br>Hỏi Aki &amp; Chi, hai đứa sẽ chỉ đường cho!";
+   :"Bạn đang cần một ly chứ?<br>Hỏi Aki &amp; Chi, hai đứa sẽ chỉ đường cho!";
   sEl.innerHTML=en
    ?'<span>Tap the alley door to enter</span><span class="mx-2 opacity-50">·</span><span>Drag to look around</span>'
    :'<span>Chạm cửa cuối hẻm để vào</span><span class="mx-2 opacity-50">·</span><span>Kéo để nhìn quanh</span>';
@@ -1041,12 +1041,19 @@ addEventListener('pointermove',e=>{
 addEventListener('pointerup',e=>{if(drag&&drag.m<6&&e.target===R.domElement){askGyro();act(hitTarget(e))}drag=null});
 addEventListener('deviceorientation',e=>{if(e.gamma==null||e.beta==null)return;if(gb===null)gb=e.beta;gxT=cl(e.gamma/25,-1,1);gyT=cl((e.beta-gb)/25,-1,1)});
 wrap.addEventListener('pointermove',e=>{if(drag||go)return;const k=hitTarget(e);wrap.style.cursor=k?'pointer':'grab'});
-addEventListener('resize',()=>{R.setSize(W(),H());cam.aspect=W()/H();cam.updateProjectionMatrix()});
+// fit: không bao giờ set canvas 0x0 khi cổng đang bị ẩn (nguyên nhân gây đen màn hình)
+const fit=()=>{const w=W(),h=H();if(!w||!h)return;R.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()};
+addEventListener('resize',fit);
+R.domElement.addEventListener('webglcontextlost',e=>e.preventDefault());
 cam.aspect=W()/H();cam.updateProjectionMatrix();
 
 // nút "Trở lại cổng" → quay về cảnh 3D
 const ob=document.getElementById('back'),oldBack=ob.onclick;
-ob.onclick=()=>{oldBack();go=0;ov.style.opacity=0;ui.style.opacity=1;wrap.style.cursor='grab';ty=tp=yaw=pit=0;doorG.rotation.y=0;cam.fov=50;cam.updateProjectionMatrix()};
+ob.onclick=()=>{oldBack();go=0;ov.style.opacity=0;ui.style.opacity=1;wrap.style.cursor='grab';ty=tp=yaw=pit=0;doorG.rotation.y=0;cam.fov=50;cam.updateProjectionMatrix();
+ // hiện cổng ngay và mờ dần vào (crossfade) thay vì để trang đen 1 giây
+ split.style.transition='none';split.style.opacity=0;split.style.display='flex';
+ document.body.classList.add('overflow-hidden');fit();
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{split.style.transition='opacity .7s ease';split.style.opacity=1}))};
 
 /* ---- vòng lặp ---- */
 let last=performance.now(),dead=false;
@@ -1056,6 +1063,7 @@ function frame(now){
  if(split.style.display==='none')return;
  try{
  const t=now/1000;WU.value=t;
+ if(Math.abs(cam.aspect-W()/H())>.01)fit();
  // camera
  if(!go){
   mx+=(mxT-mx)*.05;my+=(myT-my)*.05;gx+=(gxT-gx)*.08;gy+=(gyT-gy)*.08;
