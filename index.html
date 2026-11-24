@@ -470,7 +470,7 @@ applyLang(true);
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
-<!-- Cổng 3D v4.1: Rèm tre che lối nhỏ bên trái xuống The Core + chặn không cho nhân vật đi vào bên trong nhà -->
+<!-- Cổng 3D v4.2: Rèm tre che lối nhỏ bên trái xuống The Core + chặn không cho nhân vật đi vào bên trong nhà -->
 <script>
 (()=>{
 const s=document.createElement('script');
@@ -492,11 +492,11 @@ R.shadowMap.enabled=true;R.shadowMap.type=TH.PCFSoftShadowMap;
 
 /* ---- DOM ---- */
 const st=document.createElement('style');
-st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:.85rem;padding-right:.85rem;pointer-events:none;transition:opacity .6s}#s3d-spots{display:none;flex-wrap:wrap;justify-content:center;gap:.38rem;margin-bottom:.5rem;pointer-events:auto;max-width:min(94vw,34rem)}#s3d-spots button{font-family:Inter,sans-serif;font-size:.7rem;letter-spacing:.02em;color:#f3efe4;background:rgba(12,11,9,.72);border:1px solid rgba(212,175,55,.38);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:.32rem .72rem;border-radius:999px;transition:all .2s;white-space:nowrap}#s3d-spots button:hover,#s3d-spots button.act{background:rgba(212,175,55,.25);border-color:#d4af37;color:#ffcf6a}#s3d-box{max-width:min(92vw,31rem);background:rgba(10,10,8,.68);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:1rem;padding:.65rem 1.2rem;box-shadow:0 10px 30px rgba(0,0,0,.6)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.92rem;line-height:1.45;letter-spacing:.015em;color:#f6f3eb;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.38rem 0 0;padding-top:.35rem;border-top:1px solid rgba(212,175,55,.18);font-family:Inter,sans-serif;font-weight:300;font-size:.7rem;line-height:1.4;letter-spacing:.02em;color:rgba(212,175,55,.95)}#s3d-sub span{display:inline-block}#s3d-joy{position:absolute;left:1rem;bottom:calc(9.6rem + env(safe-area-inset-bottom,0px));z-index:26;width:76px;height:76px;border-radius:50%;background:rgba(12,11,9,.45);border:1px solid rgba(212,175,55,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);touch-action:none;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.45)}#s3d-knob{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc8a,#b88c28);box-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;transform:translate(0,0);transition:transform .06s linear}@media(min-width:768px){#s3d-box{padding:.8rem 1.65rem}#s3d-hint{font-size:1.05rem}#s3d-sub{font-size:.76rem}#s3d-spots button{font-size:.76rem;padding:.38rem .88rem}#s3d-joy{left:1.5rem;bottom:2.2rem;width:84px;height:84px}}';
+st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:.85rem;padding-right:.85rem;pointer-events:none;transition:opacity .6s}#s3d-box{max-width:min(92vw,31rem);background:rgba(10,10,8,.68);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:1rem;padding:.65rem 1.2rem;box-shadow:0 10px 30px rgba(0,0,0,.6)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.92rem;line-height:1.45;letter-spacing:.015em;color:#f6f3eb;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.38rem 0 0;padding-top:.35rem;border-top:1px solid rgba(212,175,55,.18);font-family:Inter,sans-serif;font-weight:300;font-size:.7rem;line-height:1.4;letter-spacing:.02em;color:rgba(212,175,55,.95)}#s3d-sub span{display:inline-block}#s3d-joy{position:absolute;left:1rem;bottom:calc(9.6rem + env(safe-area-inset-bottom,0px));z-index:26;width:76px;height:76px;border-radius:50%;background:rgba(12,11,9,.45);border:1px solid rgba(212,175,55,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);touch-action:none;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.45)}#s3d-knob{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc8a,#b88c28);box-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;transform:translate(0,0);transition:transform .06s linear}@media(min-width:768px){#s3d-box{padding:.8rem 1.65rem}#s3d-hint{font-size:1.05rem}#s3d-sub{font-size:.76rem}#s3d-joy{left:1.5rem;bottom:2.2rem;width:84px;height:84px}}';
 document.head.appendChild(st);
 const wrap=document.createElement('div');wrap.id='s3d';wrap.appendChild(R.domElement);split.prepend(wrap);
 const ui=document.createElement('div');ui.id='s3d-ui';
-ui.innerHTML='<div id="s3d-spots"></div><div id="s3d-box"><p id="s3d-hint"></p><p id="s3d-sub"></p></div>';
+ui.innerHTML='<div id="s3d-box"><p id="s3d-hint"></p><p id="s3d-sub"></p></div>';
 ui.style.background='linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 62%,rgba(0,0,0,.55))';split.appendChild(ui);
 // Cần điều khiển ảo (Joystick) để đi bộ tự do trong sân
 const joy=document.createElement('div');joy.id='s3d-joy';joy.setAttribute('aria-label','Di chuyển');
@@ -544,16 +544,6 @@ if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc tắt nắng
 const dogs=[];
 let stage='outside'; // 'outside' | 'entering' | 'inside' | 'alley'
 
-// Các điểm khám phá nhanh ngoài trời (không đi vào bên trong nhà)
-const SPOTS=[
- {id:'garden',vi:'Sân vườn',en:'Garden',x:-2.3,z:3.5,lx:-1.8,lz:-3.0},
- {id:'porch',vi:"Hiên ne'hub",en:"ne'hub Porch",x:-2.2,z:-0.5,lx:-1.8,lz:-5.0},
- {id:'alley',vi:'Lối hẻm',en:'The Alley',x:2.07,z:-3.2,lx:2.07,lz:-12.0},
- {id:'core_door',vi:'Cửa The Core',en:'The Core Door',x:2.07,z:-10.2,lx:2.07,lz:-12.5}
-];
-const spotsEl=document.getElementById('s3d-spots');
-let goSpot=null; // callback gán bên dưới
-
 window.sync3DLang=()=>{
  const en=lang==='en';
  const sbTxt=$('s3d-sb');
@@ -561,13 +551,6 @@ window.sync3DLang=()=>{
  outBtn.textContent=en?'← Outside gate':'← Ra ngoài cổng';
  outBtn.classList.toggle('hidden',stage!=='inside');
  joy.style.display=stage==='inside'?'flex':'none';
- spotsEl.style.display=stage==='inside'?'flex':'none';
- spotsEl.innerHTML=SPOTS.map(sp=>`<button type="button" data-sp="${sp.id}">${en?sp.en:sp.vi}</button>`).join('');
- spotsEl.querySelectorAll('button').forEach(b=>b.onclick=e=>{
-  e.stopPropagation();
-  const sp=SPOTS.find(x=>x.id===b.dataset.sp);
-  if(sp&&goSpot)goSpot(sp);
- });
  const hEl=$('s3d-hint'),sEl=$('s3d-sub');
  if(!hEl||!sEl)return;
  if(stage==='outside'){
@@ -1231,7 +1214,7 @@ function mkDog(o){
   else zs.material.opacity=0;
  };
  return d}
-const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào con!',labelEn:"Aki: Don't touch me!",bCol:'#ff7b6b'});
+const aki=mkDog({s:1.05,body:'#d9bb8c',belly:'#f1e6d2',ear:'#c49a66',muzzle:'#efe3cf',floppy:true,low:true,zo:0,mode:'bite',labelVi:'Aki: Đừng chạm vào con nha!',labelEn:"Aki: Don't touch me!",bCol:'#ff7b6b'});
 const chi=mkDog({s:.82,body:'#dd9a45',belly:'#f0d9ae',ear:'#cf8a3a',muzzle:'#e9bf84',floppy:false,low:false,collar:true,zo:.5,mode:'belly',labelVi:'Chi: Xoa bụng con đi!',labelEn:'Chi: Touch my belly please!',bCol:'#d4af37'});
 dogs.push(aki,chi);
 if(!NIGHT){[[aki,0,0,-.6],[chi,1,7.5,.8]].forEach(([d,i,t0,yw])=>{d.spot=SP[i];d.place(SP[i].p[0],SP[i].p[1],yw);d.pose=1;d.state='sleep';d.t=t0;d.dur=15})}
@@ -1245,7 +1228,7 @@ const outBase=()=>W()/H()<1?{p:V(-1.6,1.72,25.5),l:V(-1.6,1.45,6.2)}:{p:V(-1.6,1
 const inStart=()=>W()/H()<1?{p:V(-2.3,1.72,3.6),l:V(-1.2,1.65,-5.0)}:{p:V(-2.3,1.72,3.5),l:V(-1.0,1.68,-5.0)};
 
 // Trạng thái nhân vật bên trong khuôn viên sân vườn
-const pl={x:-2.3,z:3.5,eyeY:1.72,yaw:-.18,tyaw:-.18,pit:0,tpit:0,path:[],pi:0,lookEnd:null,walkPhase:0};
+const pl={x:-2.3,z:3.5,eyeY:1.72,yaw:-.18,tyaw:-.18,pit:0,tpit:0,path:[],pi:0,walkPhase:0};
 let outYaw=0,outPit=0,outTY=0,outTP=0;
 let t0=0,P0,L0,CRV,curL=outBase().l,drag=null,mxT=0,myT=0,mx=0,my=0,gxT=0,gyT=0,gx=0,gy=0,gb=null,askedG=0;
 let gateSlide=0,gateTarget=0,lastStep=0;
@@ -1283,7 +1266,7 @@ function resolveMove(nx,nz){
 }
 
 // Tìm đường ngoài trời tránh góc tường nhà ne'hub
-function setWalkTarget(tx,tz,lookEnd=null){
+function setWalkTarget(tx,tz){
  [tx,tz]=resolveMove(tx,tz);
  const pts=[];
  const sx=pl.x,sz=pl.z;
@@ -1296,16 +1279,10 @@ function setWalkTarget(tx,tz,lookEnd=null){
   pts.push([2.07,1.9],[0.4,1.9]);
  }
  pts.push([tx,tz]);
- pl.path=pts;pl.pi=0;pl.lookEnd=lookEnd;
+ pl.path=pts;pl.pi=0;
  wpG.position.set(tx,gY(tx,tz)+.02,tz);
  wpG.visible=true;
 }
-
-goSpot=sp=>{
- if(stage!=='inside')return;
- hideNt();
- setWalkTarget(sp.x,sp.z,{x:sp.lx,z:sp.lz});
-};
 
 // Phím WASD / Mũi tên
 const keys={};
@@ -1394,7 +1371,7 @@ function enterAlley(){
  if(pl.z>-5.5)pts.push(V(2.07,1.64,-2.5),V(2.07,1.6,-6.5));
  pts.push(V(2.07,1.55,-10.2),V(2.07,1.5,BZ+.3));
  CRV=new TH.CatmullRomCurve3(pts);
- ui.style.opacity=0;outBtn.classList.add('hidden');joy.style.display='none';spotsEl.style.display='none';wrap.style.cursor='default';
+ ui.style.opacity=0;outBtn.classList.add('hidden');joy.style.display='none';wrap.style.cursor='default';
 }
 
 const act=k=>{
@@ -1430,7 +1407,6 @@ addEventListener('pointermove',e=>{
  }else{
   pl.tyaw+=dx/W()*2.6;
   pl.tpit=cl(pl.tpit-dy/H()*1.3,-.52,.52);
-  pl.lookEnd=null;
  }
  drag.x=e.clientX;drag.y=e.clientY});
 addEventListener('pointerup',e=>{if(drag&&drag.m<6&&e.target===R.domElement){askGyro();act(hitTarget(e))}drag=null});
@@ -1493,7 +1469,7 @@ function frame(now){
   const mag=Math.hypot(fwd,str);
   let moving=false;
   if(mag>.12){
-   pl.path=[];wpG.visible=false;pl.lookEnd=null;
+   pl.path=[];wpG.visible=false;
    const sc=Math.min(1,mag);fwd=fwd/mag*sc;str=str/mag*sc;
    const fx=-Math.sin(pl.yaw),fz=-Math.cos(pl.yaw);
    const rx=Math.cos(pl.yaw),rz=-Math.sin(pl.yaw);
@@ -1501,13 +1477,12 @@ function frame(now){
    const [nx,nz]=resolveMove(pl.x+(fx*fwd+rx*str)*spd,pl.z+(fz*fwd+rz*str)*spd);
    if(Math.hypot(nx-pl.x,nz-pl.z)>.001){pl.x=nx;pl.z=nz;moving=true}
   }else if(pl.path.length){
-   // Tự động rảo bước tới điểm đã chạm trên mặt đất hoặc hotspot ngoài trời
+   // Tự động rảo bước tới điểm đã chạm trên mặt đất ngoài trời
    const tgt=pl.path[pl.pi],dx=tgt[0]-pl.x,dz=tgt[1]-pl.z,dist=Math.hypot(dx,dz);
    if(dist<.18){
     pl.pi++;
     if(pl.pi>=pl.path.length){
      pl.path=[];wpG.visible=false;
-     if(pl.lookEnd){pl.tyaw=Math.atan2(-(pl.lookEnd.x-pl.x),-(pl.lookEnd.z-pl.z));pl.lookEnd=null}
     }
    }else{
     const wantYaw=Math.atan2(-dx,-dz);
