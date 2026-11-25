@@ -269,7 +269,7 @@ html.g3d #nehub,html.g3d #core{display:none!important}
   <footer class="bg-forest-green py-12 text-center border-t border-white/5 px-6">
     <h5 class="font-playfair text-vintage-gold text-2xl mb-2">The Core</h5>
     <p class="font-inter text-gray-400 text-xs tracking-widest uppercase mb-6" data-t>Speakeasy Bar · Mũi Né</p>
-    <p class="font-inter text-gray-500 text-sm">&copy; 2026 The Core. For the ones who find us.</p>
+    <p class="font-inter text-gray-500 text-sm">&copy; 2026 The Core. Pretty memories in our heart.</p>
   </footer>
 </div>
 
@@ -300,12 +300,12 @@ const renderStory=()=>$('story-list').innerHTML=story.map(([src,alt,h,p],i)=>`
  </div>`).join('');
 
 const menu=[
- ['Spirit-Forward','Đậm đà • Đậm chất • Hương vị nồng nàn',[
+ ['Spirit-Forward Cocktails','Đậm đà • Đậm chất • Hương vị nồng nàn',[
   ['God Father','','Scotch Whisky, Amaretto'],
   ['Negroni','','Gin, Campari, Sweet Vermouth'],
   ['Troya','','Scotch Whisky, Cointreau, Amaretto, Pink Grapefruit Liqueur, Lime Juice'],
   ['Boulevardier','','Bourbon, Campari, Sweet Vermouth']]],
- ['Citrus & Refreshing','Chua dịu • Tươi mát • Dễ uống',[
+ ['Citrus & Refreshing Cocktails','Chua dịu • Tươi mát • Dễ uống',[
   ['Whisky Sour','','Bourbon, Lime Juice, Sugar, Egg White, Angostura Bitters'],
   ['Daiquiri','','White Rum, Lime Juice, Sugar'],
   ['Salty Dog','','Vodka, Pink Grapefruit Liqueur, Salt Rim'],
@@ -316,15 +316,12 @@ const menu=[
   ["Devil's Age",'','Gin, Cointreau, Campari, Lemon Juice'],
   ['Long Island','','Vodka, Tequila, White Rum, Gin, Cointreau, Lemon Juice, Sugar, Coca-Cola']]],
  ['Classic Mixers','Pha chế đơn giản • Dễ thưởng thức',[
-  ['Gin Tonic',"Gordon's",'Gin, Tonic Water, Fresh Lime'],
-  ['Gin Tonic','Bombay','Gin, Tonic Water, Fresh Lime'],
-  ['Whiskey Coke',"Ballantine's",'Whisky, Coca-Cola'],
-  ['Whiskey Coke','Jim Beam','Bourbon, Coca-Cola'],
-  ['Whiskey Coke',"Jack Daniel's",'Tennessee Whiskey, Coca-Cola'],
+  ['Gin Tonic','','Gin, Tonic Water, Fresh Lime'],
+  ['Whiskey Coke','','Whiskey, Coca-Cola'],
   ['Rum Coke','','White Rum, Coca-Cola, Fresh Lime Wedge'],
-  ['Vodka Soda / Tonic','','Absolut Vodka, Soda / Tonic Water, Lime'],
+  ['Vodka Soda / Tonic','','Vodka, Soda / Tonic Water, Lime'],
   ['Jägerbomb','','Jägermeister Shot, Red Bull Energy'],
-  ['Tequila Sunrise','','Jose Cuervo Tequila, Orange Juice, Grenadine'],
+  ['Tequila Sunrise','','Tequila, Orange Juice, Grenadine'],
   ['Mojito','','White Rum, Lime Juice, Sugar, Mint, Soda']]],
  ['House Spirits','Rượu nguyên chất • Serve kèm đá / Ly shot',[
   ["Ballantine's Finest",'Ly · Chai','Scotch'],
@@ -369,7 +366,7 @@ const SEN=[
  ['A Call from the Past','Beneath a lampshade casting amber light, a glossy black rotary phone sits quietly beside an empty bottle. It no longer rings sharply. Instead it gathers unspoken thoughts and whispers, entrusted to the still air of the bar.'],
  ['The Vintage White Vespa','Tucked away in a quiet corner, the cream-white Vespa glows under the golden lamp spilling off a rough wall. It no longer hums along the sandy roads of Mui Ne. It rests here as a symbol of trips with no return date, and of the free spirit of decades past.']];
 const EN={
- 'Trở lại cổng':'Back to gate',"Bên cạnh ne'hub có một cánh cửa khác.":"Next door to ne'hub, there's another door.",'Cho những ai có duyên…':'For those meant to be here…','Gõ cửa để vào':'Knock to enter','Mũi Né, Việt Nam':'Mui Ne, Vietnam','Speakeasy Bar · Mũi Né':'Speakeasy Bar · Mũi Né',
+ 'Trở lại cổng':'Back to gate',"Bên cạnh ne'hub có một cánh cửa khác.":"Next door to ne'hub, there's another door.",'Cho những ai có duyên…':'For those meant to be here…','Gõ cửa để vào':'Knock to enter','Mũi Né, Việt Nam':'Mui Ne, Vietnam','Speakeasy Bar · Mũi Né':'Speakeasy Bar · Mui Ne',
  'Linh Hồn Của Thời Gian':'The Soul of Time',
  'Bên dưới ánh đèn mờ ảo, mỗi đồ vật tại The Core đều là một chứng nhân tĩnh lặng. Một bộ sưu tập ký ức được sắp đặt cẩn thận, chờ đợi những ai tinh tế lắng nghe.':'Under the dim light, every object at The Core is a silent witness. A carefully arranged collection of memories, waiting for those who listen closely.',
  'Đặt Chỗ':'Book a Table','Để chúng mình chuẩn bị trước chỗ ngồi nha.':'Let us get your seat ready.',
@@ -1489,7 +1486,7 @@ const companions=COMPANION_STYLES.map((st,idx)=>{
  char.G.visible=false;
  return {char,x:-4.8,z:9.2,face:Math.PI,ph:idx*1.3,side:(idx%2===0?-1:1)*(0.68+Math.floor(idx/2)*0.42),back:0.95+Math.floor(idx/2)*0.85};
 });
-const trail=[]; // lưu dấu chân nhân vật chính để nhóm bạn đi nối đuôi tự nhiên
+const trail=[];
 
 setPartyCount=n=>{
  partySize=cl(n,1,5);
@@ -1504,7 +1501,7 @@ setPartyCount=n=>{
  });
 };
 
-// Camera góc nhìn thứ 3: quay quanh nhân vật, tự co lại khi bị tường / nhà chắn
+// Camera góc nhìn thứ 3
 const inFov3=()=>W()/H()<1?58:50;
 const camBlocked=(x,z)=>(x>-6.4&&x<1.42&&z>-10.34&&z<-1.55)||(x>-1.7&&x<3.3&&z<-11.85)||x<-8.5||x>5.5||z>17||z<-17;
 function camDist(px,pz,yaw,pit,base){
@@ -1515,7 +1512,7 @@ function camAt(px,pz,yaw,pit,d){
  const ty=gY(px,pz)+1.35,cp=Math.cos(pit);
  return {p:V(px+Math.sin(yaw)*cp*d,Math.min(2.9,Math.max(.45,ty+Math.sin(pit)*d)),pz+Math.cos(yaw)*cp*d),l:V(px,ty+.05,pz)}}
 
-// Vị trí đứng ban đầu ngay ngoài cổng sắt xanh navy (nhân vật xuất hiện luôn ở ngoài cổng)
+// Vị trí đứng ban đầu ngay ngoài cổng sắt xanh navy
 const pl={x:-4.8,z:8.2,face:Math.PI,yaw:0,tyaw:0,pit:.24,tpit:.24,cd:3.8,stuck:0,path:[],pi:0,walkPhase:0};
 let outYaw=0,outPit=0,outTY=0,outTP=0;
 let t0=0,P0,L0,CRV,curL=V(-3.4,1.35,6.2),drag=null,mxT=0,myT=0,mx=0,my=0,gxT=0,gyT=0,gx=0,gy=0,gb=null,askedG=0;
@@ -1524,7 +1521,6 @@ const LD=V(BX,1.4,BZ-1.2),ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,cl=(v,a,b)=>
 const ray=new TH.Raycaster(),m2=new TH.Vector2();
 const walkPlane=new TH.Plane(new TH.Vector3(0,1,0),-.06);
 
-// Vật cản ngoài sân & hiên
 const OBS=[
  [-3.2,1.9,.42],[-2.2,1.9,.42],[-2.6,3.1,.58],
  [-5.3,.45,.32],[.7,.45,.32],[-3.4,-1.0,.52],[-4.2,.2,.3],
