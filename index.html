@@ -91,14 +91,14 @@ html.g3d #nehub,html.g3d #core{display:none!important}
 .sep li{position:relative;padding-left:1rem;white-space:nowrap}
 .sep li::before{content:"";position:absolute;left:.4rem;top:50%;width:3px;height:3px;margin-top:-1.5px;border-radius:50%;background:#d4af37;opacity:.75}
 
-/* ===== CTA trong cảnh 3D: Bản đồ + đổi nhân vật ===== */
-#s3d-ctl{position:absolute;right:1rem;bottom:calc(9.6rem + env(safe-area-inset-bottom,0px));z-index:26;display:none;flex-direction:column;gap:.55rem;align-items:flex-end}
-@media(min-width:768px){#s3d-ctl{right:1.5rem;bottom:2.2rem}}
-.g3d-btn{display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.5rem .95rem;border-radius:999px;font:400 .74rem/1 Inter,sans-serif;letter-spacing:.04em;color:#f3e7c0;background:rgba(12,11,9,.58);border:1px solid rgba(212,175,55,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;white-space:nowrap;transition:border-color .25s,color .25s}
-.g3d-btn:hover,.g3d-btn:active{border-color:#d4af37;color:#d4af37}
-.g3d-btn svg{width:1.05rem;height:1.05rem;flex:none}
-.g3d-btn .gs{font-size:1.05rem;line-height:1;display:inline-flex;gap:.3rem;align-items:center}
-.g3d-btn .gs .sl{opacity:.4;font-size:.8rem}
+/* ===== Tổ hợp nút góc trên bên trái (Tắt nắng -> Giới tính -> Map -> Ra cổng) ===== */
+#s3d-stack{position:absolute;left:1rem;top:max(1rem,env(safe-area-inset-top));z-index:30;display:flex;flex-direction:column;gap:.45rem;align-items:flex-start}
+.g3d-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:2.2rem;padding:.4rem .82rem;border-radius:999px;font:400 .73rem/1 Inter,sans-serif;letter-spacing:.03em;color:#f3e7c0;background:rgba(12,11,9,.56);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(0,0,0,.4);cursor:pointer;touch-action:manipulation;white-space:nowrap;transition:border-color .25s,color .25s,background .25s}
+.g3d-btn:hover,.g3d-btn:active{border-color:#d4af37;color:#d4af37;background:rgba(18,16,12,.75)}
+.g3d-btn svg{width:.98rem;height:.98rem;flex:none}
+.g3d-btn .gs{font-size:.98rem;line-height:1;display:inline-flex;gap:.26rem;align-items:center}
+.g3d-btn .gs .sl{opacity:.4;font-size:.75rem}
+
 .mapm{position:absolute;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:max(.75rem,env(safe-area-inset-top)) .75rem max(.75rem,env(safe-area-inset-bottom));background:rgba(4,6,5,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .mapm[hidden]{display:none}
 .mapm-card{width:min(100%,640px);max-height:100%;display:flex;flex-direction:column;background:#0f1a13;border:1px solid rgba(212,175,55,.4);border-radius:1rem;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7)}
@@ -362,7 +362,7 @@ const SEN=[
  ['A Call from the Past','Beneath a lampshade casting amber light, a glossy black rotary phone sits quietly beside an empty bottle. It no longer rings sharply. Instead it gathers unspoken thoughts and whispers, entrusted to the still air of the bar.'],
  ['The Vintage White Vespa','Tucked away in a quiet corner, the cream-white Vespa glows under the golden lamp spilling off a rough wall. It no longer hums along the sandy roads of Mui Ne. It rests here as a symbol of trips with no return date, and of the free spirit of decades past.']];
 const EN={
- 'Trở lại cổng':'Back to gate',"Bên cạnh ne'hub có một cánh cửa khác.":"Next door to ne'hub, there's another door.",'Cho những ai có duyên…':'For those meant to be here…','Gõ cửa để vào':'Knock to enter','Mũi Né, Việt Nam':'Mui Ne, Vietnam','Speakeasy Bar · Mũi Né':'Speakeasy Bar · Mui Ne',
+ 'Trở lại cổng':'Back to gate',"Bên cạnh ne'hub có một cánh cửa khác.":"Next door to ne'hub, there's another door.",'Cho những ai có duyên…':'For those meant to be here…','Gõ cửa để vào':'Knock to enter','Mũi Né, Việt Nam':'Mui Ne, Vietnam','Speakeasy Bar · Mũi Né':'Speakeasy Bar · Mũi Né',
  'Linh Hồn Của Thời Gian':'The Soul of Time',
  'Bên dưới ánh đèn mờ ảo, mỗi đồ vật tại The Core đều là một chứng nhân tĩnh lặng. Một bộ sưu tập ký ức được sắp đặt cẩn thận, chờ đợi những ai tinh tế lắng nghe.':'Under the dim light, every object at The Core is a silent witness. A carefully arranged collection of memories, waiting for those who listen closely.',
  'Đặt Chỗ':'Book a Table','Để chúng mình chuẩn bị trước chỗ ngồi nha.':'Let us get your seat ready.',
@@ -513,7 +513,7 @@ applyLang(true);
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
-<!-- Cổng 3D v4.2: Rèm tre che lối nhỏ bên trái xuống The Core + chặn không cho nhân vật đi vào bên trong nhà -->
+<!-- Cổng 3D v4.3: Đồng bộ giờ VN (UTC+7), tổ hợp nút góc trái, joystick cao kèm mũi tên, chấm sáng tay nắm cửa & Map ne'hub x The Core -->
 <script>
 (()=>{
 const s=document.createElement('script');
@@ -535,24 +535,34 @@ R.shadowMap.enabled=true;R.shadowMap.type=TH.PCFSoftShadowMap;
 
 /* ---- DOM ---- */
 const st=document.createElement('style');
-st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:.85rem;padding-right:.85rem;pointer-events:none;transition:opacity .6s}#s3d-box{max-width:min(92vw,31rem);background:rgba(10,10,8,.68);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:1rem;padding:.65rem 1.2rem;box-shadow:0 10px 30px rgba(0,0,0,.6)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.92rem;line-height:1.45;letter-spacing:.015em;color:#f6f3eb;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.38rem 0 0;padding-top:.35rem;border-top:1px solid rgba(212,175,55,.18);font-family:Inter,sans-serif;font-weight:300;font-size:.7rem;line-height:1.4;letter-spacing:.02em;color:rgba(212,175,55,.95)}#s3d-sub span{display:inline-block}#s3d-joy{position:absolute;left:1rem;bottom:calc(9.6rem + env(safe-area-inset-bottom,0px));z-index:26;width:76px;height:76px;border-radius:50%;background:rgba(12,11,9,.45);border:1px solid rgba(212,175,55,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);touch-action:none;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.45)}#s3d-knob{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc8a,#b88c28);box-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;transform:translate(0,0);transition:transform .06s linear}@media(min-width:768px){#s3d-box{padding:.8rem 1.65rem}#s3d-hint{font-size:1.05rem}#s3d-sub{font-size:.76rem}#s3d-joy{left:1.5rem;bottom:2.2rem;width:84px;height:84px}}';
+st.textContent='#s3d{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}#s3d canvas{display:block;width:100%;height:100%}#s3d-ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-left:.85rem;padding-right:.85rem;pointer-events:none;transition:opacity .6s}#s3d-box{max-width:min(92vw,31rem);background:rgba(10,10,8,.68);border:1px solid rgba(212,175,55,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:1rem;padding:.65rem 1.2rem;box-shadow:0 10px 30px rgba(0,0,0,.6)}#s3d-hint{margin:0;font-family:"Playfair Display",serif;font-style:italic;font-size:.92rem;line-height:1.45;letter-spacing:.015em;color:#f6f3eb;text-shadow:0 2px 10px rgba(0,0,0,.9)}#s3d-sub{margin:.38rem 0 0;padding-top:.35rem;border-top:1px solid rgba(212,175,55,.18);font-family:Inter,sans-serif;font-weight:300;font-size:.7rem;line-height:1.4;letter-spacing:.02em;color:rgba(212,175,55,.95)}#s3d-sub span{display:inline-block}#s3d-joy{position:absolute;left:1rem;bottom:calc(12.2rem + env(safe-area-inset-bottom,0px));z-index:26;width:82px;height:82px;border-radius:50%;background:rgba(12,11,9,.48);border:1px solid rgba(212,175,55,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);touch-action:none;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.45)}#s3d-joy .ja{position:absolute;width:12px;height:12px;color:rgba(212,175,55,.68);pointer-events:none;transition:color .15s,transform .15s}#s3d-joy .ja.u{top:5px;left:50%;transform:translateX(-50%)}#s3d-joy .ja.d{bottom:5px;left:50%;transform:translateX(-50%)}#s3d-joy .ja.l{left:5px;top:50%;transform:translateY(-50%)}#s3d-joy .ja.r{right:5px;top:50%;transform:translateY(-50%)}#s3d-knob{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc8a,#b88c28);box-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;transform:translate(0,0);transition:transform .06s linear;z-index:2}@media(min-width:768px){#s3d-box{padding:.8rem 1.65rem}#s3d-hint{font-size:1.05rem}#s3d-sub{font-size:.76rem}#s3d-joy{left:1.5rem;bottom:2.2rem;width:88px;height:88px}}';
 document.head.appendChild(st);
 const wrap=document.createElement('div');wrap.id='s3d';wrap.appendChild(R.domElement);split.prepend(wrap);
 const ui=document.createElement('div');ui.id='s3d-ui';
 ui.innerHTML='<div id="s3d-box"><p id="s3d-hint"></p><p id="s3d-sub"></p></div>';
 ui.style.background='linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 62%,rgba(0,0,0,.55))';split.appendChild(ui);
-// Cần điều khiển ảo (Joystick) để đi bộ tự do trong sân
+
+// Cần điều khiển ảo (Joystick) kèm 4 mũi tên hướng dẫn
 const joy=document.createElement('div');joy.id='s3d-joy';joy.setAttribute('aria-label','Di chuyển');
-joy.innerHTML='<div id="s3d-knob"></div>';split.appendChild(joy);
+joy.innerHTML='<svg class="ja u" viewBox="0 0 12 12" fill="currentColor"><path d="M6 2L10.5 8.5H1.5Z"/></svg><svg class="ja d" viewBox="0 0 12 12" fill="currentColor"><path d="M6 10L10.5 3.5H1.5Z"/></svg><svg class="ja l" viewBox="0 0 12 12" fill="currentColor"><path d="M2 6L8.5 1.5V10.5Z"/></svg><svg class="ja r" viewBox="0 0 12 12" fill="currentColor"><path d="M10 6L3.5 1.5V10.5Z"/></svg><div id="s3d-knob"></div>';
+split.appendChild(joy);
 const knob=document.getElementById('s3d-knob');
-/* ---- CTA trong cảnh 3D: Bản đồ định vị (GTA) + đổi nhân vật nam / nữ ---- */
+
+/* ---- Tổ hợp nút góc trên bên trái: Tắt nắng -> Giới tính -> Map -> Ra cổng ---- */
 const GMAPS='https://maps.app.goo.gl/J18k2h7i2Zd39XSt6';
 let female=false,mapOpen=false;
 try{female=localStorage.getItem('hero')==='f'}catch(_){}
-const ctl=document.createElement('div');ctl.id='s3d-ctl';ctl.className='g3d-el';
-ctl.innerHTML='<button type="button" id="s3d-map" class="g3d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span id="s3d-map-t"></span></button><button type="button" id="s3d-gen" class="g3d-btn"><span class="gs"><span id="g-m">♂</span><span class="sl">/</span><span id="g-f">♀</span></span></button>';
-split.appendChild(ctl);
-const mapBtn=document.getElementById('s3d-map'),genBtn=document.getElementById('s3d-gen');
+
+const stack=document.createElement('div');stack.id='s3d-stack';stack.className='g3d-el';
+stack.innerHTML='<button type="button" id="s3d-nd" class="g3d-btn" aria-label="Ngày / Đêm">☀ / ☾</button><button type="button" id="s3d-gen" class="g3d-btn"><span class="gs"><span id="g-m">♂</span><span class="sl">/</span><span id="g-f">♀</span></span></button><button type="button" id="s3d-map" class="g3d-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span id="s3d-map-t"></span></button><button type="button" id="s3d-out" class="g3d-btn hidden"></button>';
+split.appendChild(stack);
+
+const tg=document.getElementById('s3d-nd');
+const genBtn=document.getElementById('s3d-gen');
+const mapBtn=document.getElementById('s3d-map');
+const outBtn=document.getElementById('s3d-out');
+tg.onclick=()=>{const u=new URL(location.href);u.searchParams.set('mode',NIGHT?'day':'night');location.href=u};
+
 const mm=document.createElement('div');mm.className='mapm g3d-el';mm.hidden=true;mm.setAttribute('role','dialog');mm.setAttribute('aria-modal','true');
 mm.innerHTML='<div class="mapm-card"><div class="mapm-h"><div><b id="mm-t"></b><small id="mm-a"></small></div><button type="button" class="mapm-x" id="mm-x" aria-label="Close">&times;</button></div><div id="mm-map"></div><div class="mapm-f"><span id="mm-r"></span><a id="mm-go" class="mapm-go" href="'+GMAPS+'" target="_blank" rel="noopener"></a></div></div>';
 split.appendChild(mm);
@@ -561,13 +571,13 @@ function updGen(){const gm=document.getElementById('g-m'),gf=document.getElement
  genBtn.setAttribute('aria-label',lang==='en'?'Switch character (male / female)':'Đổi nhân vật (nam / nữ)')}
 function mapTxt(){const e=lang==='en';
  document.getElementById('s3d-map-t').textContent=e?'Map':'Bản đồ';
- document.getElementById('mm-t').textContent='THE CORE · '+(e?'LOCATOR':'ĐỊNH VỊ');
+ document.getElementById('mm-t').textContent="ne'hub x The Core · "+(e?'LOCATOR':'ĐỊNH VỊ');
  document.getElementById('mm-a').textContent=e?'Khu phố 1, Nguyễn Tấn Định St., Hàm Tiến, Mũi Né':'Khu phố 1, đường Nguyễn Tấn Định, Hàm Tiến, Mũi Né';
  document.getElementById('mm-r').textContent=e?'Drag to move · Pinch to zoom':'Kéo để di chuyển · Chụm để phóng to';
  document.getElementById('mm-go').textContent=(e?'Open in Google Maps':'Mở Google Maps')+' ↗';
  mapBtn.setAttribute('aria-label',e?'Open map':'Mở bản đồ');updGen()}
-function updCtl(){const v=stage==='outside'||stage==='inside';ctl.style.display=v?'flex':'none';genBtn.style.display=stage==='inside'?'inline-flex':'none'}
-const MAPSVG=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2102 1193" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The Core map">
+function updCtl(){const v=stage==='outside'||stage==='inside';stack.style.display=v?'flex':'none';genBtn.style.display=stage==='inside'?'inline-flex':'none'}
+const MAPSVG=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2102 1193" preserveAspectRatio="xMidYMid meet" role="img" aria-label="ne'hub x The Core map">
 <defs>
 <pattern id="mmd" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1.7" fill="#d4af37" opacity=".16"/></pattern>
 <radialGradient id="mmg"><stop offset="0" stop-color="#ffb84d" stop-opacity=".6"/><stop offset="1" stop-color="#ffb84d" stop-opacity="0"/></radialGradient>
@@ -623,9 +633,9 @@ const MAPSVG=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2102 1193" pr
 <ellipse rx="16" ry="7" fill="#0a120d" opacity=".6"/>
 <path d="M0 0C-22-26-34-44-34-62A34 34 0 1 1 34-62C34-44 22-26 0 0Z" fill="#d4af37" stroke="#1b3a2a" stroke-width="4"/>
 <circle cy="-62" r="13" fill="#122419"/>
-<rect x="-98" y="22" width="196" height="58" rx="14" fill="#0c0a08" fill-opacity=".86" stroke="#d4af37" stroke-opacity=".6" stroke-width="2"/>
-<text y="50" text-anchor="middle" font-family="'Playfair Display',serif" font-weight="600" font-size="26" letter-spacing="4" fill="#d4af37">THE CORE</text>
-<text y="69" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" letter-spacing="3.5" fill="#e8dfc6">SPEAKEASY BAR</text>
+<rect x="-148" y="22" width="296" height="62" rx="14" fill="#0c0a08" fill-opacity=".88" stroke="#d4af37" stroke-opacity=".65" stroke-width="2"/>
+<text y="51" text-anchor="middle" font-family="'Playfair Display',serif" font-weight="600" font-size="24" letter-spacing="2.2" fill="#d4af37">ne'hub x The Core</text>
+<text y="72" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="12" letter-spacing="3" fill="#e8dfc6">CO-WORKING · SPEAKEASY</text>
 </g>
 </svg>
 <div class="mm-zc"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">&minus;</button><button type="button" data-z="home" aria-label="Center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button></div>`;
@@ -667,15 +677,7 @@ document.getElementById('mm-x').onclick=closeMap;
 mm.addEventListener('pointerdown',e=>{if(e.target===mm)closeMap()});
 genBtn.onclick=()=>{female=!female;try{localStorage.setItem('hero',female?'f':'m')}catch(_){}hero.setLook(female);updGen()};
 
-
-const tg=document.createElement('button');tg.type='button';tg.setAttribute('aria-label','Ngày / Đêm');tg.className='g3d-el g3d-top absolute left-4 z-30 font-inter text-xs text-gray-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 hover:border-vintage-gold backdrop-blur-md transition';tg.textContent='☀ / ☾';
-tg.onclick=()=>{const u=new URL(location.href);u.searchParams.set('mode',NIGHT?'day':'night');location.href=u};split.appendChild(tg);
-// nút ra lại ngoài cổng (chỉ hiện khi nhân vật đã bước vào trong sân)
-const outBtn=document.createElement('button');outBtn.type='button';
-outBtn.className='g3d-el hidden absolute left-4 z-30 font-inter text-xs text-gray-200 bg-black/45 px-3 py-1.5 rounded-full border border-white/20 hover:border-vintage-gold backdrop-blur-md transition';
-outBtn.style.top='calc(max(1rem,env(safe-area-inset-top)) + 2.4rem)';
-split.appendChild(outBtn);
-// lời nhắc (bong bóng thoại) bên cạnh nút ngày / đêm
+// Bong bóng nhắc nhở tắt nắng nằm ngang hàng với nút ☀ / ☾ đầu tiên
 const sb=document.createElement('div');sb.setAttribute('aria-hidden','true');
 sb.className='g3d-el g3d-top absolute left-[5.4rem] z-30 pointer-events-none max-w-[calc(100vw-11.2rem)] rounded-xl border border-vintage-gold/40 bg-black/68 backdrop-blur-md px-3 py-1.5 font-playfair italic text-[11.5px] md:text-sm text-gray-100 leading-snug';
 sb.innerHTML='<i class="absolute -left-1 top-2.5 w-2 h-2 rotate-45 bg-black/68 border-l border-b border-vintage-gold/40"></i><span id="s3d-sb"></span>';
@@ -700,9 +702,17 @@ Object.assign(EN,{
  "ne'hub đã đóng cửa buổi tối. Hẹn gặp bạn vào sáng mai nhé…":"ne'hub is closed for the night. See you in the morning…"
 });
 
-/* ---- ngày / đêm ---- */
-const qs=new URLSearchParams(location.search),hr=new Date().getHours(),mq=qs.get('mode');
-const NIGHT=mq==='night'||(mq!=='day'&&(hr>=18||hr<6)); // tự động: 6h-18h là ban ngày, còn lại là ban đêm (?mode=day / ?mode=night để xem thử)
+/* ---- Đồng bộ ngày / đêm theo múi giờ Việt Nam (Asia/Ho_Chi_Minh, UTC+7) ---- */
+function getVietnamHour(){
+ try{
+  const h=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',hour12:false}).format(new Date());
+  return parseInt(h,10)%24;
+ }catch(_){
+  return new Date(Date.now()+7*3600000).getUTCHours();
+ }
+}
+const qs=new URLSearchParams(location.search),vnHour=getVietnamHour(),mq=qs.get('mode');
+const NIGHT=mq==='night'||(mq!=='day'&&(vnHour>=18||vnHour<6)); // đồng bộ thực tế Việt Nam: 06:00-17:59 sáng, 18:00-05:59 tối
 const K=NIGHT?{bg:['#04080e','#0d1b28'],fog:.024,hemi:.32,sun:.24,sunc:0x8fa8c8,exp:1.05}:{bg:['#86b9de','#e4eef1'],fog:.012,hemi:.95,sun:1.05,sunc:0xfff0d6,exp:1.08};
 R.toneMappingExposure=K.exp;
 if(NIGHT)sb.style.display='none';   // ban đêm: ẩn lời nhắc tắt nắng
@@ -769,9 +779,21 @@ const limb=(a,b,r)=>{const A=V(...a),B=V(...b),m=new TH.Mesh(new TH.CylinderGeom
  m.position.copy(A).add(B).multiplyScalar(.5);m.quaternion.setFromUnitVectors(V(0,1,0),B.clone().sub(A).normalize());m.castShadow=true;scene.add(m)};
 const gtex=(c='255,214,140')=>{const k=document.createElement('canvas');k.width=k.height=64;const x=k.getContext('2d'),g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,`rgba(${c},.95)`);g.addColorStop(.35,`rgba(${c},.3)`);g.addColorStop(1,`rgba(${c},0)`);x.fillStyle=g;x.fillRect(0,0,64,64);return new TH.CanvasTexture(k)};
 const GL=gtex();
-const spr=(tx,w,h,x,y,z,o=.5)=>{const s=new TH.Sprite(new TH.SpriteMaterial({map:tx,transparent:true,opacity:o,depthWrite:false,fog:false,blending:TH.AdditiveBlending}));s.scale.set(w,h,1);s.position.set(x,y,z);scene.add(s);return s};
+const spr=(tx,w,h,x,y,z,o=.5,p=scene)=>{const s=new TH.Sprite(new TH.SpriteMaterial({map:tx,transparent:true,opacity:o,depthWrite:false,fog:false,blending:TH.AdditiveBlending}));s.scale.set(w,h,1);s.position.set(x,y,z);p.add(s);return s};
 const pool=(x,z,r,o)=>{const m=new TH.Mesh(new TH.PlaneGeometry(r*2,r*2),new TH.MeshBasicMaterial({map:GL,transparent:true,opacity:o,depthWrite:false,blending:TH.AdditiveBlending,fog:false}));m.rotation.x=-Math.PI/2;m.position.set(x,.07,z);scene.add(m)};
 const cone=(x,y,z,r,h,o)=>{const m=new TH.Mesh(new TH.ConeGeometry(r,h,24,1,true),new TH.MeshBasicMaterial({color:0xffc070,transparent:true,opacity:o,depthWrite:false,blending:TH.AdditiveBlending,side:TH.DoubleSide,fog:false}));m.position.set(x,y-h/2,z);scene.add(m)};
+
+// Chấm tròn nhỏ phát sáng ở tay nắm cổng & cửa mỗi khi nằm trong tầm nhìn của nhân vật
+const handleDots=[];
+function addHandleDot(parent,x,y,z,cond){
+ const g=new TH.Group();g.position.set(x,y,z);parent.add(g);
+ const dot=new TH.Mesh(new TH.SphereGeometry(.042,12,10),new TH.MeshBasicMaterial({color:0xfff1b8,transparent:true,opacity:.95,fog:false}));
+ g.add(dot);
+ const halo=spr(gtex('255,212,110'),.36,.36,0,0,0,.85,g);
+ const wp=new TH.Vector3();
+ handleDots.push({g,dot,halo,cond,wp});
+}
+
 // lá cây: gom thành 1 InstancedMesh (có gió)
 const LV=[],G1=['#3f8a3a','#5fa646','#2f6f35'],G2=['#9bd06a','#e6f0c0','#5fa646','#3f8a3a'],G3=['#6aa84a','#86bb55','#4d8a3a','#9cc866'];
 const leaf=(x,y,z,sx,sy,sz,col)=>LV.push([x,y,z,sx,sy,sz,col,Math.random()*1.2-.6,Math.random()*6.28,Math.random()*1.2-.6]);
@@ -889,6 +911,8 @@ const gateG=new TH.Group();gateG.position.set(GX0,0,FZ-.12);scene.add(gateG);
  // Hộp khóa, tay nắm vàng đồng & 2 bánh xe ray dưới đáy
  box(.11,.32,.09,NAVY,-GW/2+.12,gb+1.02,0,gateG);
  box(.03,.16,.13,flat('#d4af37',{metalness:.7,roughness:.35}),-GW/2+.12,gb+1.02,0,gateG);
+ // Chấm tròn sáng gợi ý ở tay nắm cổng (hiện khi đứng ngoài cổng)
+ addHandleDot(gateG,-GW/2+.12,gb+1.02,.12,()=>stage==='outside');
  [-GW/2+.35,GW/2-.35].forEach(wx=>cyl(.055,.055,.04,STEEL,wx,.06,0,gateG).rotation.x=Math.PI/2);
 }
 // Vùng chạm tương tác của cánh cổng & hàng rào trước
@@ -934,8 +958,12 @@ box(1.7,.1,.2,DKW,-4.3,2.18,-2.0);box(1.7,.1,.2,DKW,-4.3,.83,-2.0);box(.1,1.4,.2
 [-1,1].forEach(k=>{if(NIGHT)box(.75,1.3,.05,WD,-4.3+k*.375,1.5,-1.98);else{const sh=box(.45,1.3,.05,WD,-4.3+k*.98,1.5,-1.75);sh.rotation.y=k*-1.05}});   // ngày: mở lá sách / đêm: đóng
 // khung cửa đi + 2 cánh gỗ (đêm đóng, ngày mở ra ngoài)
 box(.1,2.25,.2,DKW,-2.5,1.12,-2.0);box(.1,2.25,.2,DKW,-1.1,1.12,-2.0);box(1.5,.1,.2,DKW,-1.8,2.25,-2.0);
-{const leafD=(hx,dir)=>{const g=new TH.Group();g.position.set(hx,1.1,-2.03);scene.add(g);box(.65,2.15,.06,WD,dir*.325,0,0,g);box(.1,1.2,.02,flat('#2a3234'),dir*.325,.2,.04,g);
-  g.rotation.y=NIGHT?0:(dir>0?-1.45:1.45)};leafD(-2.45,1);leafD(-1.15,-1)}
+{const leafD=(hx,dir,hasHandle)=>{const g=new TH.Group();g.position.set(hx,1.1,-2.03);scene.add(g);box(.65,2.15,.06,WD,dir*.325,0,0,g);box(.1,1.2,.02,flat('#2a3234'),dir*.325,.2,.04,g);
+  if(hasHandle){
+   box(.03,.14,.09,flat('#d4af37',{metalness:.7,roughness:.35}),dir*.55,-.04,.05,g);
+   addHandleDot(g,dir*.55,-.04,.11,()=>stage==='inside');
+  }
+  g.rotation.y=NIGHT?0:(dir>0?-1.45:1.45)};leafD(-2.45,1,false);leafD(-1.15,-1,true)}
 // ô thoáng bông gió
 [-4.3,-1.8].forEach(x=>{box(1.5,.38,.08,flat('#f6f2e8'),x,2.55,-1.97);const p=new TH.Mesh(new TH.PlaneGeometry(1.36,.26),LAT);p.position.set(x,2.55,-1.92);scene.add(p)});
 box(.22,.3,.1,flat('#aaa'),-5.7,2.2,-1.95);
@@ -997,14 +1025,11 @@ let bambooPivot=null,bambooPush=0,hitBamboo=null;
 {
  const bx=-1.5,z0=-9.92,z1=-12.16,bz=(z0+z1)/2,bw=Math.abs(z1-z0),bh=2.44,topY=2.56;
  const BMB=flat('#6e5329',{roughness:.78}),BMB2=flat('#8a6834',{roughness:.75});
- // Hai trụ tre/gỗ hai bên lối đi nhỏ & thanh xà treo rèm phía trên
  cyl(.05,.055,2.68,BMB,bx,1.34,z0);
  cyl(.05,.055,2.68,BMB,bx,1.34,z1);
  const topBar=cyl(.04,.04,bw+.24,BMB,bx,topY,bz);topBar.rotation.x=Math.PI/2;
- // Vài đốt tre nhỏ trang trí trên trụ
  [.6,1.3,2.0].forEach(ry=>{cyl(.058,.058,.025,flat('#4a3619'),bx,ry,z0);cyl(.058,.058,.025,flat('#4a3619'),bx,ry,z1)});
 
- // Texture mành/rèm tre tự nhiên (nan tre ngang mảnh + dây đan dọc)
  const btex=pat(256,256,g=>{
   g.fillStyle='#8c6934';g.fillRect(0,0,256,256);
   const cols=['#9e7840','#b28b4e','#7d5c2b','#a88045','#6f5023'];
@@ -1015,7 +1040,6 @@ let bambooPivot=null,bambooPush=0,hitBamboo=null;
    g.fillRect(0,y+3,256,1);
    if(Math.random()<.35){g.fillStyle='rgba(255,230,175,.12)';g.fillRect(Math.random()*200,y,35+Math.random()*40,2)}
   }
-  // 5 đường dây đan dọc giữ các nan tre
   g.fillStyle='#3b2812';
   [26,76,128,180,230].forEach(dx=>{g.fillRect(dx,0,3,256)});
  },[2,5]);
@@ -1031,9 +1055,10 @@ let bambooPivot=null,bambooPush=0,hitBamboo=null;
  curtainMesh.castShadow=true;curtainMesh.receiveShadow=true;
  bambooPivot.add(curtainMesh);
 
- // Thanh tre nẹp dưới đáy rèm & dây buộc hai bên
  const botBar=cyl(.032,.032,bw-.04,BMB2,0,-bh,0,bambooPivot);botBar.rotation.x=Math.PI/2;
  [-bw*.32,bw*.32].forEach(dz=>cyl(.008,.008,.12,flat('#3b2812'),0,-.04,dz,bambooPivot));
+ // Chấm sáng gợi ý tương tác trên rèm tre
+ addHandleDot(bambooPivot,.08,-1.35,0,()=>stage==='inside');
 
  hitBamboo=box(.45,2.6,bw+.1,new TH.MeshBasicMaterial({visible:false}),bx,1.3,bz);
 }
@@ -1064,6 +1089,8 @@ box(BW-.3,.05,BD-.3,flat('#4a2d1a'),BCX,.03,BZ-BD/2);box(BW-.3,.12,BD-.3,flat('#
 const doorG=new TH.Group();doorG.position.set(BX-.6,0,BZ-.02);scene.add(doorG);
 box(1.2,2.0,.08,new TH.MeshStandardMaterial({map:WOODT,roughness:.8}),.6,1.0,0,doorG);
 box(1.2,.05,.1,GOLD,.6,.3,0,doorG);box(1.2,.05,.1,GOLD,.6,1.2,0,doorG);box(.05,.3,.1,GOLD,1.05,.95,.06,doorG);
+// Chấm tròn sáng gợi ý ở tay nắm cửa The Core
+addHandleDot(doorG,1.05,.95,.14,()=>stage==='inside');
 const shut=new TH.Object3D();
 box(.08,2.05,.14,GOLD,BX-.64,1.02,BZ+.02);box(.08,2.05,.14,GOLD,BX+.64,1.02,BZ+.02);box(1.4,.04,.4,flat('#555'),BX,.02,BZ+.1);
 const hitCore=box(2.0,3.4,.6,new TH.MeshBasicMaterial({visible:false}),BX,1.7,BZ+.25);   // vùng bấm cửa The Core
@@ -1511,6 +1538,19 @@ addEventListener('keyup',e=>{keys[e.code]=false});
 
 // Virtual Joystick (di chuyển tự do bằng ngón tay / chuột)
 let joyId=null,joyX=0,joyY=0;
+const joyArrows={
+ u:joy.querySelector('.ja.u'),
+ d:joy.querySelector('.ja.d'),
+ l:joy.querySelector('.ja.l'),
+ r:joy.querySelector('.ja.r')
+};
+const hiJoy=(jx,jy)=>{
+ if(!joyArrows.u)return;
+ joyArrows.u.style.color=jy<-.28?'#ffe082':'rgba(212,175,55,.68)';
+ joyArrows.d.style.color=jy>.28?'#ffe082':'rgba(212,175,55,.68)';
+ joyArrows.l.style.color=jx<-.28?'#ffe082':'rgba(212,175,55,.68)';
+ joyArrows.r.style.color=jx>.28?'#ffe082':'rgba(212,175,55,.68)';
+};
 const updJoy=(cx,cy)=>{
  const r=joy.getBoundingClientRect(),maxR=r.width*.38;
  const dx=cx-(r.left+r.width/2),dy=cy-(r.top+r.height/2);
@@ -1518,11 +1558,12 @@ const updJoy=(cx,cy)=>{
  const kx=d>2?Math.cos(ang)*clD:0,ky=d>2?Math.sin(ang)*clD:0;
  knob.style.transform=`translate(${kx}px,${ky}px)`;
  joyX=kx/maxR;joyY=ky/maxR;
+ hiJoy(joyX,joyY);
  if(Math.hypot(joyX,joyY)>.15){pl.path=[];wpG.visible=false}
 };
 joy.addEventListener('pointerdown',e=>{e.stopPropagation();joyId=e.pointerId;joy.setPointerCapture(e.pointerId);updJoy(e.clientX,e.clientY)});
 joy.addEventListener('pointermove',e=>{if(e.pointerId===joyId)updJoy(e.clientX,e.clientY)});
-const endJoy=e=>{if(e.pointerId===joyId){joyId=null;joyX=joyY=0;knob.style.transform='translate(0,0)'}};
+const endJoy=e=>{if(e.pointerId===joyId){joyId=null;joyX=joyY=0;hiJoy(0,0);knob.style.transform='translate(0,0)'}};
 joy.addEventListener('pointerup',endJoy);joy.addEventListener('pointercancel',endJoy);
 
 const hitTarget=e=>{
@@ -1645,6 +1686,7 @@ ob.onclick=()=>{oldBack();stage='inside';gateTarget=1;gateSlide=1;gateG.position
 
 /* ---- vòng lặp ---- */
 let last=performance.now(),dead=false;
+const camDir=new TH.Vector3(),toDot=new TH.Vector3();
 function frame(now){
  if(dead)return;requestAnimationFrame(frame);
  const dt=Math.min((now-last)/1000,.1);last=now;
@@ -1751,6 +1793,24 @@ function frame(now){
  const hv=stage==='inside'||stage==='entering'||stage==='alley';
  hero.G.visible=hv;
  if(hv){hero.G.position.set(pl.x,gY(pl.x,pl.z),pl.z);hero.G.rotation.y=pl.face;hero.update(hMove,pl.walkPhase,t,dt)}
+
+ // Cập nhật chấm tròn sáng gợi ý ở tay nắm cổng & cửa khi trong tầm nhìn
+ cam.getWorldDirection(camDir);
+ handleDots.forEach((hd,idx)=>{
+  if(!hd.cond()){hd.g.visible=false;return}
+  hd.g.getWorldPosition(hd.wp);
+  toDot.copy(hd.wp).sub(cam.position);
+  const dist=toDot.length();
+  const maxD=stage==='outside'?34:15;
+  const inView=dist<maxD&&toDot.normalize().dot(camDir)>.38;
+  hd.g.visible=inView;
+  if(inView){
+   const pulse=.5+.5*Math.sin(t*4.2+idx*1.4);
+   hd.dot.scale.setScalar(.82+.32*pulse);
+   hd.halo.scale.setScalar(.28+.18*pulse);
+   hd.halo.material.opacity=.5+.45*pulse;
+  }
+ });
 
  // đèn nhấp nháy, neon, ô nhìn trộm
  if(alley)alley.intensity=2.6*(.93+.07*Math.sin(t*13)*Math.sin(t*3.7));
