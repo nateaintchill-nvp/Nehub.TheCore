@@ -143,7 +143,10 @@ html.g3d #nehub,html.g3d #core{display:none!important}
 .intro-cta svg{width:1.05rem;height:1.05rem}
 
 /* ===== Nhiệm vụ / voucher ===== */
-.q-body{padding:.2rem 1.1rem 1.2rem;font:300 .88rem/1.6 Inter,sans-serif;color:#d9d6cb}
+.q-body{padding:.2rem 1.1rem 1.2rem;font:300 .88rem/1.6 Inter,sans-serif;color:#d9d6cb;overflow:auto;max-height:min(68dvh,520px)}
+.q-h{margin:.3rem 0 .5rem;font:600 .95rem/1.35 'Playfair Display',serif;color:#d4af37;letter-spacing:.03em;text-wrap:balance}
+.q-sep{height:1px;background:rgba(212,175,55,.25);margin:1.1rem 0 .9rem}
+#q2-p{text-align:center;color:#ffe082;font-weight:400}
 .q-body p{margin:.2rem 0 .9rem;text-wrap:pretty}
 #q-dots{display:flex;gap:.55rem;justify-content:center;margin:.4rem 0 .7rem}
 #q-p{text-align:center;color:#ffe082;font-weight:400}
@@ -152,6 +155,12 @@ html.g3d #nehub,html.g3d #core{display:none!important}
 .q-code{display:flex;gap:.7rem;align-items:center;justify-content:space-between;border:1px dashed rgba(212,175,55,.7);border-radius:.7rem;padding:.7rem 1rem;margin:.3rem 0 .6rem;font:600 1.25rem 'Playfair Display',serif;letter-spacing:.12em;color:#d4af37}
 .q-code button{font:500 .72rem Inter,sans-serif;letter-spacing:.05em;padding:.45rem .9rem;border-radius:999px;border:0;background:#d4af37;color:#122419;cursor:pointer}
 #q-v small{display:block;text-align:center;color:#9c9a90;font-size:.74rem}
+
+/* ===== Lựa chọn rủ Sion đi uống rượu ===== */
+#s3d-choice{position:absolute;left:0;right:0;bottom:calc(6.6rem + env(safe-area-inset-bottom,0px));z-index:32;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;padding:0 1rem}
+#s3d-choice[hidden]{display:none}
+#s3d-choice .g3d-btn{font-size:.85rem;padding:.62rem 1.15rem}
+#ch-2{animation:partyGlow 1.6s ease-in-out infinite;color:#ffe699;background:rgba(22,18,10,.82);border-color:rgba(212,175,55,.8)}
 </style>
 </head>
 <body class="overflow-hidden selection:bg-vintage-gold selection:text-forest-green">
@@ -600,17 +609,23 @@ document.getElementById('intro-cta').onclick=()=>{introOn=false;intro.classList.
 
 /* ---- Nhiệm vụ: xoa bụng Chi 5 lần, không chạm Aki → voucher 5% ---- */
 const QN=5,QCODE='CHI-5OFF';
-let qCount=0,qDone=false,qOpen=false;
+let qCount=0,qDone=false,qOpen=false,sDone=false;
 try{qDone=localStorage.getItem('quest5')==='1'}catch(_){}
+try{sDone=localStorage.getItem('questSion')==='1'}catch(_){}
+let sion=null,ab=null,choiceOpen=false,sionTaps=0,sionLast=0,abducted=false;
 const questBtn=document.createElement('button');questBtn.type='button';questBtn.id='s3d-quest-btn';questBtn.className='g3d-btn cta-glow';
 const qm=document.createElement('div');qm.className='mapm g3d-el';qm.hidden=true;qm.setAttribute('role','dialog');qm.setAttribute('aria-modal','true');
-qm.innerHTML='<div class="mapm-card"><div class="mapm-h"><div><b id="q-t"></b><small id="q-s"></small></div><button type="button" class="mapm-x" id="q-x" aria-label="Close">&times;</button></div><div class="q-body"><p id="q-d"></p><div id="q-dots"></div><p id="q-p"></p><div id="q-v"></div></div></div>';
+qm.innerHTML='<div class="mapm-card"><div class="mapm-h"><div><b id="q-t"></b><small id="q-s"></small></div><button type="button" class="mapm-x" id="q-x" aria-label="Close">&times;</button></div><div class="q-body"><h5 class="q-h" id="q1-h"></h5><p id="q-d"></p><div id="q-dots"></div><p id="q-p"></p><div id="q-v"></div><div class="q-sep"></div><h5 class="q-h" id="q2-h"></h5><p id="q2-d"></p><p id="q2-p"></p></div></div>';
 split.appendChild(qm);
 function renderQuest(){
  const en=lang==='en',g=id=>document.getElementById(id);
- questBtn.textContent=qDone?(en?'🎁 5% Voucher':'🎁 Voucher 5%'):(en?'🎁 Quest ':'🎁 Nhiệm vụ ')+qCount+'/'+QN;
- g('q-t').textContent=en?'QUEST · 5% VOUCHER':'NHIỆM VỤ · VOUCHER 5%';
- g('q-s').textContent=en?"Chi's belly rubs · Night only":'Xoa bụng Chi · Chỉ dành cho buổi tối';
+ questBtn.textContent=(en?'🎁 Quests ':'🎁 Nhiệm vụ ')+((qDone?1:0)+(sDone?1:0))+'/2';
+ g('q-t').textContent=en?'QUESTS':'NHIỆM VỤ';
+ g('q-s').textContent=en?'Two little missions · Day & night':'Hai nhiệm vụ nhỏ · Ngày & đêm';
+ g('q1-h').textContent=en?"① Chi's belly rubs · 5% voucher (night only)":'① Xoa bụng Chi · Voucher 5% (chỉ buổi tối)';
+ g('q2-h').textContent=en?'② Invite DJ Sion for a drink (daytime only)':'② Rủ DJ Sion đi uống rượu (chỉ buổi sáng)';
+ g('q2-d').textContent=en?'In the morning, DJ Sion is making music out in the yard. Poke him twice in a row and ask him out for a drink. He is a bit moody, so think twice…':'Buổi sáng, DJ Sion đang làm nhạc ngoài sân. Chạm vào anh ấy 2 lần liên tiếp rồi rủ anh ấy đi uống rượu nhé. Anh ấy hơi khó tính, cân nhắc trước khi rủ nha…';
+ g('q2-p').textContent=sDone?(en?'Quest complete! 🎉':'Hoàn thành nhiệm vụ! 🎉'):(en?'Not done yet':'Chưa hoàn thành');
  g('q-d').textContent=en?'Get Chi to roll over for a belly rub 5 times without touching Aki. Touch Aki and you start over! This quest is only available in the evening (6 PM – 6 AM, Vietnam time).':'Khiến Chi nằm ngửa bụng 5 lần mà không chạm vào Aki. Lỡ chạm Aki là phải làm lại từ đầu nha! Nhiệm vụ chỉ dành cho buổi tối (18:00 – 06:00 giờ Việt Nam).';
  g('q-dots').innerHTML=Array.from({length:QN},(_,i)=>'<i class="qd'+((qDone||i<qCount)?' on':'')+'"></i>').join('');
  g('q-p').textContent=qDone?(en?'Quest complete! 🎉':'Hoàn thành nhiệm vụ! 🎉'):(en?'Progress: ':'Tiến độ: ')+qCount+'/'+QN;
@@ -629,6 +644,15 @@ function questPet(mode,busy){
  qCount++;renderQuest();
  if(qCount>=QN){qDone=true;try{localStorage.setItem('quest5','1')}catch(_){}renderQuest();setTimeout(openQuest,900)}
 }
+/* ---- Lựa chọn khi chạm Sion 2 lần liên tiếp ---- */
+const chEl=document.createElement('div');chEl.id='s3d-choice';chEl.className='g3d-el';chEl.hidden=true;
+chEl.innerHTML='<button type="button" id="ch-1" class="g3d-btn"></button><button type="button" id="ch-2" class="g3d-btn"></button>';
+split.appendChild(chEl);
+const ch1=document.getElementById('ch-1'),ch2=document.getElementById('ch-2');
+function openChoice(){choiceOpen=true;chEl.hidden=false;pl.path=[];wpG.visible=false;joyX=joyY=0}
+function closeChoice(){choiceOpen=false;chEl.hidden=true}
+ch1.onclick=()=>{closeChoice();if(sion)sion.talkT=.4};
+ch2.onclick=()=>startAbduct();
 renderQuest();
 
 const tg=document.getElementById('s3d-nd');
@@ -676,7 +700,7 @@ function updCtl(){
  stack.style.display=v?'flex':'none';
  genBtn.style.display=v?'inline-flex':'none';
  partyWrap.style.display=v?'flex':'none';
- questBtn.style.display=(v&&NIGHT)?'inline-flex':'none';
+ questBtn.style.display=v?'inline-flex':'none';
  partyBtn.classList.toggle('cta-glow',stage==='outside');
 }
 const MAPSVG=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2102 1193" preserveAspectRatio="xMidYMid meet" role="img" aria-label="ne'hub x The Core map">
@@ -831,6 +855,8 @@ window.sync3DLang=()=>{
  outBtn.textContent=en?'← Outside gate':'← Ra ngoài cổng';
  outBtn.classList.toggle('hidden',stage!=='inside');
  joy.style.display=stage==='inside'?'flex':'none';
+ ch1.textContent=en?'1. sorry buddy <3':'1. sorry bạn nhé <3';
+ ch2.textContent=en?"2. LET'S GO!":'2. ĐI LUÔN!';
  dogs.forEach(d=>{if(!d.act)d.drawBbl(d.getLabel(),d.o.bCol)});
 };
 window.sync3DLang();
@@ -1018,11 +1044,9 @@ box(7.2,.18,2.8,WHITE,CX,3.05,-.6);box(2.8,.06,1.3,flat('#f6f1e2'),CX,2.94,-.6);
 cyl(.13,.13,.04,glow(NIGHT?'#3a2a20':'#d98a45'),CX,2.9,-.6);
 [-5.3,.7].forEach(x=>{box(.38,3,.38,WHITE,x,1.5,.45);box(.6,.22,.6,flat('#f3eee0'),x,2.9,.45);box(.5,.16,.5,flat('#f3eee0'),x,.08,.45)});
 const DKW=flat('#2a1a10');
-if(!NIGHT){fw(-5.05,-3.55,.85,2.15)}else{
 box(1.7,.1,.2,DKW,-4.3,2.18,-2.0);box(1.7,.1,.2,DKW,-4.3,.83,-2.0);box(.1,1.4,.2,DKW,-5.1,1.5,-2.0);box(.1,1.4,.2,DKW,-3.5,1.5,-2.0);
 {const gl=new TH.Mesh(new TH.PlaneGeometry(1.5,1.3),new TH.MeshStandardMaterial({color:0x88a8a0,transparent:true,opacity:.22,roughness:.1,metalness:.3}));gl.position.set(-4.3,1.5,-2.12);scene.add(gl)}
 [-1,1].forEach(k=>box(.75,1.3,.05,WD,-4.3+k*.375,1.5,-1.98));
-}
 box(.1,2.25,.2,DKW,-2.5,1.12,-2.0);box(.1,2.25,.2,DKW,-1.1,1.12,-2.0);box(1.5,.1,.2,DKW,-1.8,2.25,-2.0);
 {const leafD=(hx,dir,hasHandle)=>{const g=new TH.Group();g.position.set(hx,1.1,-2.03);scene.add(g);box(.65,2.15,.06,WD,dir*.325,0,0,g);box(.1,1.2,.02,flat('#2a3234'),dir*.325,.2,.04,g);
   if(hasHandle){
@@ -1283,6 +1307,16 @@ const stepSfx=()=>sfx(()=>{
  g.gain.setValueAtTime(.001,t0);g.gain.linearRampToValueAtTime(.11,t0+.015);g.gain.exponentialRampToValueAtTime(.001,t0+.09);
  ns.connect(lp);lp.connect(g);g.connect(mg);ns.start(t0,Math.random()*.15);ns.stop(t0+.1);
 });
+const thudSfx=()=>sfx(()=>{
+ const t0=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();
+ o.type='triangle';o.frequency.setValueAtTime(180,t0);o.frequency.exponentialRampToValueAtTime(45,t0+.18);
+ g.gain.setValueAtTime(.5,t0);g.gain.exponentialRampToValueAtTime(.001,t0+.22);
+ o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+.25);
+ const ns=ac.createBufferSource(),lp=ac.createBiquadFilter(),ng=ac.createGain();
+ ns.buffer=nb;lp.type='lowpass';lp.frequency.value=900;
+ ng.gain.setValueAtTime(.3,t0);ng.gain.exponentialRampToValueAtTime(.001,t0+.12);
+ ns.connect(lp);lp.connect(ng);ng.connect(mg);ns.start(t0);ns.stop(t0+.13);
+});
 const bark=low=>{if(!SND||!ac||ac.state!=='running'||!live())return;
  const f0=low?300:520,n=low?1:2;
  for(let i=0;i<n;i++){const s=ac.currentTime+.02+i*.16,o=ac.createOscillator(),g=ac.createGain(),bp=ac.createBiquadFilter();
@@ -1513,6 +1547,7 @@ function buildCharacter(opts={}){
 }
 
 const hero=buildCharacter({light:true,isFemale:female});
+hero.G.rotation.order='YXZ';
 
 // 4 nhân vật bạn đồng hành (hiện thêm khi khách chọn 2 - 5 người)
 const COMPANION_STYLES=[
@@ -1593,13 +1628,16 @@ const npcs=[];
 function mkSay(col){
  const c=document.createElement('canvas');c.width=620;c.height=136;const g=c.getContext('2d'),tx=new TH.CanvasTexture(c);
  const sp=new TH.Sprite(new TH.SpriteMaterial({map:tx,transparent:true,depthWrite:false,fog:false}));sp.scale.set(1.64,.36,1);sp.visible=false;scene.add(sp);
- let cur='';
- const draw=txt=>{cur=txt;const w=620,h=136,bh=104,r=26;g.clearRect(0,0,w,h);
+ let cur='',curSub='';
+ const draw=(txt,sub)=>{cur=txt;curSub=sub||'';const w=620,h=136,bh=104,r=26;g.clearRect(0,0,w,h);
   g.beginPath();g.moveTo(r,6);g.lineTo(w-r,6);g.quadraticCurveTo(w-6,6,w-6,r);g.lineTo(w-6,bh-r);g.quadraticCurveTo(w-6,bh,w-r,bh);
   g.lineTo(w/2+14,bh);g.lineTo(w/2,h-6);g.lineTo(w/2-14,bh);g.lineTo(r,bh);g.quadraticCurveTo(6,bh,6,bh-r);g.lineTo(6,r);g.quadraticCurveTo(6,6,r,6);g.closePath();
   g.fillStyle='rgba(12,10,8,.86)';g.fill();g.lineWidth=4;g.strokeStyle=col;g.stroke();
-  g.fillStyle='#f8f5ec';g.textAlign='center';g.textBaseline='middle';g.font='italic 600 27px "Playfair Display",serif';g.fillText(txt,w/2,bh/2+2);tx.needsUpdate=true};
- FONTQ.push(()=>{if(cur)draw(cur)});
+  g.fillStyle='#f8f5ec';g.textAlign='center';g.textBaseline='middle';g.font='italic 600 27px "Playfair Display",serif';
+  if(sub){g.fillText(txt,w/2,36);g.fillStyle='#d4af37';g.font='italic 400 19px "Playfair Display",serif';g.fillText(sub,w/2,76)}
+  else g.fillText(txt,w/2,bh/2+2);
+  tx.needsUpdate=true};
+ FONTQ.push(()=>{if(cur)draw(cur,curSub)});
  return {sp,draw};
 }
 function mkNpc(o){
@@ -1656,6 +1694,154 @@ sam.update=(dt,t)=>{
  }
  sam.post();
 };
+/* -- Sion (DJ): chỉ buổi sáng, ngồi làm nhạc ở bàn DJ ngoài sân, quay mặt ra cổng -- */
+const sionJog=[];
+if(!NIGHT){
+ const DX=-.2,DZ=-1.0,DKM=flat('#1f1f24'),CTL=flat('#0e0e12');
+ box(1.3,.05,.7,DKM,DX,.75,DZ);
+ [[-.55,-.28],[.55,-.28],[-.55,.28],[.55,.28]].forEach(([a,b])=>box(.05,.6,.05,DKM,DX+a,.45,DZ+b));
+ box(.78,.05,.34,CTL,DX,.8,DZ+.02);
+ box(.16,.03,.3,flat('#1b1b22'),DX,.83,DZ+.02);
+ [-1,1].forEach(k=>{
+  const w=cyl(.115,.115,.02,flat('#3a3a44',{metalness:.5,roughness:.5}),DX+k*.25,.84,DZ+.02);
+  sionJog.push(w);
+  box(.03,.012,.03,glow('#ffb84d'),.07,.012,0,w);
+  for(let i=0;i<3;i++)box(.025,.02,.03,glow(['#ff5a5a','#7ec27a','#ffb84d'][i]),DX+k*.25-.07+i*.07,.83,DZ-.12);
+ });
+ for(let i=0;i<4;i++)box(.02,.03,.06,flat('#c9ccd0',{metalness:.6}),DX-.05+i*.033,.85,DZ+.04);
+ [-1,1].forEach(k=>{box(.16,.28,.16,flat('#15151a'),DX+k*.55,.9,DZ+.2);cyl(.055,.055,.02,flat('#3a3a44'),DX+k*.55,.88,DZ+.285).rotation.x=Math.PI/2});
+ chair(DX,-1.72,0);
+ sion=mkNpc({style:{top:'#2b2340',noVest:true,noHat:true,leg:'#1f2937',scale:1.02},col:'#c084fc',line:'',x:DX,z:-1.72,face:0,r:.42});
+ OBS.push([DX,DZ,.62]);
+ sion.sit=1;
+ const hpM=flat('#17171b',{metalness:.3});
+ const band=new TH.Mesh(new TH.TorusGeometry(.148,.013,6,18,Math.PI),hpM);band.position.set(0,1.66,0);sion.ch.B.add(band);
+ [-1,1].forEach(k=>{const c=new TH.Mesh(new TH.CylinderGeometry(.05,.05,.04,12),hpM);c.rotation.z=Math.PI/2;c.position.set(k*.148,1.66,0);sion.ch.B.add(c)});
+ sion.update=(dt,t)=>{
+  const talking=sion.talkT>0;if(talking)sion.talkT-=dt;
+  const a=Math.atan2(pl.x-sion.x,pl.z-sion.z);
+  let sit=1,mv=false;
+  if(ab){sit=ab.sit;mv=ab.mv}
+  else{const tg=talking?cl(angD(0,a),-1,1):0;sion.face+=angD(sion.face,tg)*Math.min(1,dt*7)}
+  const gy=gY(sion.x,sion.z),seatY=.61-.9*sion.G.scale.y;
+  sion.G.position.set(sion.x,seatY*sit+gy*(1-sit),sion.z);
+  const C=sion.ch;
+  C.update(mv&&sit<.5,sion.ph,t,dt);
+  C.legL.rotation.x=C.legL.rotation.x*(1-sit)-1.1*sit;
+  C.legR.rotation.x=C.legR.rotation.x*(1-sit)-1.1*sit;
+  let aL=C.armL.rotation.x*(1-sit)+(-1.15+Math.sin(t*5)*.12)*sit,aR=C.armR.rotation.x*(1-sit)+(-1.15+Math.sin(t*6.3+1)*.12)*sit;
+  if(ab){
+   if(ab.ph==='punch')aR=ab.armR;
+   else if(ab.ph==='drag'){aL=.55+Math.sin(sion.ph)*.08;aR=.55-Math.sin(sion.ph)*.08}
+  }
+  C.armL.rotation.x=aL;C.armR.rotation.x=aR;
+  C.B.rotation.z=sit>.5?Math.sin(t*4.2)*.035:0;
+  sionJog.forEach(w=>w.rotation.y+=dt*2.2);
+  sion.post();
+ };
+}
+const SION_SUB='*he speaks Vietnamese only, sorry guys :D';
+function sionTap(){
+ const now=performance.now(),en=lang==='en';
+ if(now-sionLast>6500)sionTaps=0;
+ sionLast=now;sionTaps++;
+ if(sionTaps>=2){
+  sionTaps=0;sion.talkT=999;
+  sion.say.draw('Sion: Cho đi uống rượu luôn nhé!',en?SION_SUB:'');
+  openChoice();
+ }else{
+  sion.talkT=3.6;
+  sion.say.draw('Sion: Đừng làm phiền tui!',en?SION_SUB:'');
+ }
+}
+function abWalk(dt,sp){
+ const P=ab.pts[ab.pi];if(!P)return false;
+ const dx=P[0]-sion.x,dz=P[1]-sion.z,d=Math.hypot(dx,dz);
+ if(d<.12){ab.pi++;return ab.pi<ab.pts.length}
+ sion.face+=angD(sion.face,Math.atan2(dx,dz))*Math.min(1,dt*10);
+ const st=Math.min(d,sp*dt);sion.x+=dx/d*st;sion.z+=dz/d*st;sion.ph+=dt*8;ab.dist+=st;
+ return true;
+}
+function startAbduct(){
+ closeChoice();
+ sion.talkT=0;sion.r=0;
+ sDone=true;try{localStorage.setItem('questSion','1')}catch(_){}
+ renderQuest();
+ stage='abduct';pl.path=[];wpG.visible=false;joyX=joyY=0;hideNt();
+ P0=cam.position.clone();L0=curL.clone();
+ const hx=pl.x,hz=pl.z,inAlley=hx>=1.15&&hz<-1.8;
+ const pts=[[-1.15,-1.55],[-1.15,-.3]];
+ let wx=-1.15,wz=-.3;
+ if(inAlley){pts.push([.4,1.9],[2.07,1.9]);wx=2.07;wz=1.9}
+ let ux=hx-wx,uz=hz-wz;const L=Math.hypot(ux,uz)||1;ux/=L;uz/=L;
+ pts.push([cl(hx-ux*.85,-5.9,2.9),cl(hz-uz*.85,-11.3,5.4)]);
+ ab={ph:'rise',t:0,sit:1,mv:false,pts,pi:0,dist:0,total:1,armR:0,fall:0,hit:false,tf:0,ux:0,uz:1,bx:0,bz:0,qx:0,qz:0};
+ window.sync3DLang();updCtl();
+ ui.style.opacity=0;wrap.style.cursor='default';
+}
+function abFinish(){
+ abducted=true;ab=null;
+ stage='inside';
+ pl.x=BX;pl.z=BZ+.9;pl.face=0;pl.tyaw=pl.yaw=Math.PI;pl.tpit=pl.pit=PIT0;pl.path=[];
+ ov.style.opacity=1;
+ openCore();
+}
+function abStep(dt){
+ ab.t+=dt;ab.mv=false;
+ const C=(x,z)=>[cl(x,-5.9,2.9),cl(z,-11.3,5.4)];
+ if(ab.ph==='rise'){
+  ab.sit=Math.max(0,ab.sit-dt*2.6);
+  if(ab.sit<=0){ab.ph='go';ab.t=0}
+ }else if(ab.ph==='go'){
+  ab.mv=abWalk(dt,3.0);
+  if(!ab.mv){ab.ph='punch';ab.t=0}
+ }else if(ab.ph==='punch'){
+  const t=ab.t;
+  if(!ab.hit)sion.face+=angD(sion.face,Math.atan2(pl.x-sion.x,pl.z-sion.z))*Math.min(1,dt*12);
+  ab.armR=t<.3?.9*(t/.3):t<.42?.9-2.6*((t-.3)/.12):t<1.0?-1.7+1.7*((t-.42)/.58):0;
+  if(!ab.hit&&t>=.38){
+   ab.hit=true;thudSfx();
+   let ux=pl.x-sion.x,uz=pl.z-sion.z;const L=Math.hypot(ux,uz)||1;
+   ab.ux=ux/L;ab.uz=uz/L;ab.bx=pl.x;ab.bz=pl.z;ab.tf=0;
+  }
+  if(ab.hit){
+   ab.tf+=dt;ab.fall=ease(Math.min(1,ab.tf/.7));
+   pl.x=ab.bx+ab.ux*.5*ab.fall;pl.z=ab.bz+ab.uz*.5*ab.fall;
+   pl.face+=angD(pl.face,Math.atan2(ab.ux,ab.uz)+Math.PI)*Math.min(1,dt*9);
+  }
+  if(t>=1.9){
+   // Sion bước tới chỗ chân khách để nắm cổ chân
+   ab.pts=[C(pl.x-ab.ux*.45,pl.z-ab.uz*.45)];
+   ab.pi=0;ab.ph='toHead';ab.t=0;
+  }
+ }else if(ab.ph==='toHead'){
+  ab.mv=abWalk(dt,2.6);
+  if(!ab.mv){
+   ab.qx=pl.x+ab.ux*1.75;ab.qz=pl.z+ab.uz*1.75;
+   const sx=sion.x,sz=sion.z,pts=[];
+   if(!(sx>=1.15&&sz<-1.8)){
+    if(sx<1.15&&sz<1.4)pts.push([Math.min(sx,.3),1.9]);
+    pts.push([2.07,1.9]);
+   }
+   [-2.5,-6.2,-9.5].forEach(z=>{if(z<sz-.7)pts.push([2.07,z])});
+   pts.push([BX,BZ+.85]);
+   let tot=0,px=sx,pz=sz;pts.forEach(q=>{tot+=Math.hypot(q[0]-px,q[1]-pz);px=q[0];pz=q[1]});
+   ab.pts=pts;ab.pi=0;ab.dist=0;ab.total=Math.max(1,tot);ab.ph='drag';ab.t=0;
+  }
+ }else if(ab.ph==='drag'){
+  ab.mv=abWalk(dt,2.5);
+  // Sion nắm cổ chân kéo đi: chân khách bám theo Sion, đầu kéo lê phía sau
+  let dx=sion.x-pl.x,dz=sion.z-pl.z,d=Math.hypot(dx,dz);
+  if(d>.5){pl.x+=dx/d*(d-.5);pl.z+=dz/d*(d-.5)}
+  dx=pl.x-ab.qx;dz=pl.z-ab.qz;d=Math.hypot(dx,dz);
+  if(d>1.7){ab.qx+=dx/d*(d-1.7);ab.qz+=dz/d*(d-1.7)}
+  pl.face=Math.atan2(ab.qx-pl.x,ab.qz-pl.z)+Math.PI;
+  const rem=ab.total-ab.dist;
+  doorG.rotation.y=ease(cl((2.8-rem)/1.4,0,1))*1.5;
+  if(rem<1.6)ov.style.opacity=cl((1.6-rem)/1.4,0,1);
+  if(!ab.mv)abFinish();
+ }
+}
 /* -- Nate: ngày đi tưới cây, tối đứng hút thuốc trước cửa The Core -- */
 const ST=[{p:[-5.0,1.8],t:[-4.8,1.0]},{p:[-5.3,3.0],t:[-5.8,3.6]},{p:[.9,1.95],t:[.55,1.1]},{p:[2.07,-.6],t:[1.35,-.6]}];
 const LEG=[[],[[-3.6,4.2],[-1.0,4.0],[.9,2.7]],[[2.07,1.9]]];
@@ -1727,9 +1913,10 @@ function setWalkTarget(tx,tz){
 
 const keys={};
 addEventListener('keydown',e=>{
+ if(e.code==='Escape'&&choiceOpen){closeChoice();if(sion)sion.talkT=.4;return}
  if(e.code==='Escape'&&qOpen){closeQuest();return}
  if(e.code==='Escape'&&mapOpen){closeMap();return}
- if(mapOpen||qOpen)return;
+ if(mapOpen||qOpen||choiceOpen)return;
  if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
  keys[e.code]=true;
  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)&&stage==='inside')e.preventDefault();
@@ -1810,7 +1997,7 @@ function enterYard(){
 // Quay ra lại ngoài cổng (nhân vật quay lại đứng trước cổng)
 function exitYard(){
  if(stage!=='inside')return;
- hideNt();pl.path=[];wpG.visible=false;
+ hideNt();pl.path=[];wpG.visible=false;closeChoice();
  stage='outside';gateTarget=0;gateSlideSfx();
  pl.x=-4.8;pl.z=8.2;pl.face=Math.PI;pl.walkPhase=0;
  trail.length=0;
@@ -1842,13 +2029,14 @@ function enterAlley(){
 }
 
 const act=k=>{
- if(!k||stage==='entering'||stage==='alley')return;
+ if(!k||choiceOpen||stage==='entering'||stage==='alley'||stage==='abduct')return;
+ if(!(k.type==='npc'&&k.npc===sion))sionTaps=0;
  if(stage==='outside'){
   if(k==='gate')enterYard();
   return;
  }
  if(k.type==='dog'){k.dog.pet();return}
- if(k.type==='npc'){k.npc.talk();return}
+ if(k.type==='npc'){if(k.npc===sion){sionTap();return}k.npc.talk();return}
  if(k.type==='bamboo'){
   bambooPush=.15;bambooSfx();
   show(lang==='en'?'Private area behind the bamboo curtain…':'Khu vực nội bộ phía sau rèm tre…',3200);
@@ -1865,8 +2053,8 @@ wrap.addEventListener('pointerdown',e=>{
  if(e.target===R.domElement)drag={x:e.clientX,y:e.clientY,m:0};
 });
 addEventListener('pointermove',e=>{
- if(!drag&&stage!=='entering'&&stage!=='alley'&&e.pointerType==='mouse'){mxT=e.clientX/innerWidth-.5;myT=e.clientY/innerHeight-.5}
- if(!drag||stage==='entering'||stage==='alley')return;
+ if(!drag&&stage!=='entering'&&stage!=='alley'&&stage!=='abduct'&&e.pointerType==='mouse'){mxT=e.clientX/innerWidth-.5;myT=e.clientY/innerHeight-.5}
+ if(!drag||stage==='entering'||stage==='alley'||stage==='abduct')return;
  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m=Math.max(drag.m,Math.abs(dx)+Math.abs(dy));
  if(stage==='outside'){
   outTY=cl(outTY-dx/W()*1.2,-.45,.45);
@@ -1879,7 +2067,7 @@ addEventListener('pointermove',e=>{
 addEventListener('pointerup',e=>{if(drag&&drag.m<6&&e.target===R.domElement){askGyro();act(hitTarget(e))}drag=null});
 addEventListener('deviceorientation',e=>{if(e.gamma==null||e.beta==null)return;gyroOn=true;if(gb===null)gb=e.beta;gxT=cl(e.gamma/25,-1,1);gyT=cl((e.beta-gb)/25,-1,1)});
 wrap.addEventListener('pointermove',e=>{
- if(drag||stage==='entering'||stage==='alley')return;
+ if(drag||stage==='entering'||stage==='alley'||stage==='abduct')return;
  const k=hitTarget(e);
  wrap.style.cursor=(k&&k.type!=='ground')?'pointer':'grab';
 });
@@ -1891,7 +2079,13 @@ cam.aspect=W()/H();cam.updateProjectionMatrix();
 
 // nút "Trở lại cổng" từ bên trong trang The Core → quay về cảnh 3D ngay trước cửa quán bar
 const ob=document.getElementById('back'),oldBack=ob.onclick;
-ob.onclick=()=>{oldBack();stage='inside';gb=null;gateTarget=1;gateSlide=1;gateG.position.x=GX1;ov.style.opacity=0;
+ob.onclick=()=>{
+ // Bị Sion lôi vào quán: khi thoát ra cổng sẽ tự động là buổi tối
+ if(abducted){
+  try{sessionStorage.setItem('gateResume','1')}catch(_){}
+  const u=new URL(location.href);u.searchParams.set('mode','night');location.replace(u.toString());return;
+ }
+ oldBack();stage='inside';gb=null;gateTarget=1;gateSlide=1;gateG.position.x=GX1;ov.style.opacity=0;
  pl.x=BX;pl.z=BZ+1.5;pl.face=0;pl.tyaw=pl.yaw=Math.PI;pl.tpit=pl.pit=PIT0;pl.cd=CD0();pl.path=[];wpG.visible=false;trail.length=0;closeMap();
  window.sync3DLang();ui.style.opacity=1;wrap.style.cursor='grab';doorG.rotation.y=0;cam.fov=inFov3();cam.updateProjectionMatrix();
  split.style.transition='none';split.style.opacity=0;split.style.display='flex';
@@ -1937,7 +2131,7 @@ function frame(now){
  }else if(stage==='inside'){
   let fwd=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0)-joyY;
   let str=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joyX;
-  if(mapOpen||qOpen){fwd=0;str=0}
+  if(mapOpen||qOpen||choiceOpen){fwd=0;str=0}
   const mag=Math.hypot(fwd,str);
   let moving=false,follow=false;
   const fx=-Math.sin(pl.yaw),fz=-Math.cos(pl.yaw),rx=Math.cos(pl.yaw),rz=-Math.sin(pl.yaw);
@@ -2016,12 +2210,29 @@ function frame(now){
   doorG.rotation.y=ease(cl((u-.52)/.28,0,1))*1.5;
   if(u>.76)ov.style.opacity=(u-.76)/.24;
   if(u>=1){stage='inside';pl.tyaw=pl.yaw;pl.tpit=pl.pit;openCore()}
+ }else if(stage==='abduct'){
+  // Sion đứng dậy, đấm ngất khách rồi lôi vào The Core
+  abStep(dt);
+  if(ab&&ab.hit){
+   // Góc nhìn của khách: nằm dưới đất, ngước nhìn Sion đang kéo chân mình đi
+   const b=ease(cl(ab.tf/1.1,0,1)),hd=pl.face-Math.PI,th=ab.fall*Math.PI/2;
+   const bob=ab.ph==='drag'?Math.sin(sion.ph*2)*.012:0;
+   const povP=V(pl.x+Math.sin(hd)*1.6*Math.sin(th),1.6*Math.cos(th)+.1+.17*ab.fall+bob,pl.z+Math.cos(hd)*1.6*Math.sin(th));
+   const povL=V(sion.x,1.0,sion.z);
+   cam.position.lerpVectors(P0,povP,b);
+   curL.lerpVectors(L0,povL,b);
+   cam.lookAt(curL);
+   cam.rotateZ(Math.sin(t*1.7)*.03*b);
+  }else cam.lookAt(curL);
+  const tf=inFov3();
+  if(Math.abs(cam.fov-tf)>.05){cam.fov+=(tf-cam.fov)*Math.min(1,dt*3.5);cam.updateProjectionMatrix()}
  }
 
  // Cập nhật nhân vật chính & nhóm bạn đồng hành (1-5 người)
  hero.G.visible=true;
- hero.G.position.set(pl.x,gY(pl.x,pl.z),pl.z);
- hero.G.rotation.y=pl.face;
+ const fallA=ab?ab.fall:0;
+ hero.G.position.set(pl.x,gY(pl.x,pl.z)+.17*fallA,pl.z);
+ hero.G.rotation.y=pl.face;hero.G.rotation.x=-fallA*Math.PI/2;
  hero.update(hMove,pl.walkPhase,t,dt);
 
  if(!trail.length||Math.hypot(pl.x-trail[0].x,pl.z-trail[0].z)>.08){
@@ -2094,6 +2305,19 @@ function frame(now){
  npcs.forEach(n=>n.update(dt,t));
  R.render(scene,cam);
  }catch(e){dead=true;console.warn('3D gate off',e);off()}
+}
+// Quay lại từ The Core sau khi bị Sion lôi vào: đứng ngay trước cửa quán, trời tối
+{
+ let resume=false;
+ try{resume=sessionStorage.getItem('gateResume')==='1';sessionStorage.removeItem('gateResume')}catch(_){}
+ if(resume&&NIGHT){
+  introOn=false;intro.remove();
+  stage='inside';gateTarget=1;gateSlide=1;gateG.position.x=GX1;
+  pl.x=BX;pl.z=BZ+1.5;pl.face=0;pl.tyaw=pl.yaw=Math.PI;pl.tpit=pl.pit=PIT0;pl.cd=CD0();pl.path=[];
+  cam.fov=inFov3();cam.updateProjectionMatrix();
+  ui.style.opacity=1;wrap.style.cursor='grab';
+  window.sync3DLang();
+ }
 }
 requestAnimationFrame(frame);
 }
