@@ -1695,7 +1695,7 @@ sam.update=(dt,t)=>{
  sam.post();
 };
 /* -- Sion (DJ): chỉ buổi sáng, ngồi làm nhạc ở bàn DJ ngoài sân, quay mặt ra cổng -- */
-const sionJog=[];
+const sionJog=[];let sionChair=null;
 if(!NIGHT){
  const DX=-.2,DZ=-1.0,DKM=flat('#1f1f24'),CTL=flat('#0e0e12');
  box(1.3,.05,.7,DKM,DX,.75,DZ);
@@ -1710,7 +1710,7 @@ if(!NIGHT){
  });
  for(let i=0;i<4;i++)box(.02,.03,.06,flat('#c9ccd0',{metalness:.6}),DX-.05+i*.033,.85,DZ+.04);
  [-1,1].forEach(k=>{box(.16,.28,.16,flat('#15151a'),DX+k*.55,.9,DZ+.2);cyl(.055,.055,.02,flat('#3a3a44'),DX+k*.55,.88,DZ+.285).rotation.x=Math.PI/2});
- chair(DX,-1.72,0);
+ sionChair=chair(DX,-1.72,0);
  sion=mkNpc({style:{top:'#2b2340',noVest:true,noHat:true,leg:'#1f2937',scale:1.02},col:'#c084fc',line:'',x:DX,z:-1.72,face:0,r:.42});
  OBS.push([DX,DZ,.62]);
  sion.sit=1;
@@ -1731,10 +1731,18 @@ if(!NIGHT){
   C.legR.rotation.x=C.legR.rotation.x*(1-sit)-1.1*sit;
   let aL=C.armL.rotation.x*(1-sit)+(-1.15+Math.sin(t*5)*.12)*sit,aR=C.armR.rotation.x*(1-sit)+(-1.15+Math.sin(t*6.3+1)*.12)*sit;
   if(ab){
-   if(ab.ph==='punch')aR=ab.armR;
+   if(ab.ph==='go'||ab.ph==='toGo')aL=aR=-1.2;
+   else if(ab.ph==='punch'&&sionChair&&sionChair.parent===sion.G)aL=aR=ab.armR;
+   else if(ab.ph==='punch')aR=ab.armR;
    else if(ab.ph==='drag'){aL=.55+Math.sin(sion.ph)*.08;aR=.55-Math.sin(sion.ph)*.08}
   }
   C.armL.rotation.x=aL;C.armR.rotation.x=aR;
+  // Ghế nằm trong tay Sion: bám theo góc giơ tay
+  if(sionChair&&sionChair.parent===sion.G){
+   const a=aR;
+   sionChair.position.set(0,1.43-.62*Math.cos(a),-.62*Math.sin(a)+.05);
+   sionChair.rotation.set((a+1.2)*.9,0,0);
+  }
   C.B.rotation.z=sit>.5?Math.sin(t*4.2)*.035:0;
   sionJog.forEach(w=>w.rotation.y+=dt*2.2);
   sion.post();
@@ -1786,20 +1794,35 @@ function abFinish(){
  ov.style.opacity=1;
  openCore();
 }
+function C_RESET(){ab.armR=0}
 function abStep(dt){
  ab.t+=dt;ab.mv=false;
  const C=(x,z)=>[cl(x,-5.9,2.9),cl(z,-11.3,5.4)];
  if(ab.ph==='rise'){
   ab.sit=Math.max(0,ab.sit-dt*2.6);
-  if(ab.sit<=0){ab.ph='go';ab.t=0}
+  if(ab.sit<=0){
+   ab.ph='go';ab.t=0;
+   // Sion nhấc chiếc ghế mình đang ngồi lên
+   if(sionChair){sion.G.add(sionChair);sionChair.scale.setScalar(.9)}
+  }
  }else if(ab.ph==='go'){
   ab.mv=abWalk(dt,3.0);
   if(!ab.mv){ab.ph='punch';ab.t=0}
  }else if(ab.ph==='punch'){
   const t=ab.t;
   if(!ab.hit)sion.face+=angD(sion.face,Math.atan2(pl.x-sion.x,pl.z-sion.z))*Math.min(1,dt*12);
-  ab.armR=t<.3?.9*(t/.3):t<.42?.9-2.6*((t-.3)/.12):t<1.0?-1.7+1.7*((t-.42)/.58):0;
-  if(!ab.hit&&t>=.38){
+  // Giơ ghế qua đầu rồi bổ xuống
+  ab.armR=t<.5?-1.2-1.7*ease(t/.5):t<.62?-2.9+1.8*((t-.5)/.12):t<1.1?-1.1:0;
+  if(ab.hit&&!ab.drop&&t>=1.1){
+   ab.drop=true;
+   if(sionChair){
+    scene.add(sionChair);sionChair.scale.setScalar(1);
+    sionChair.position.set(pl.x+ab.ux*.5+.35,.25,pl.z+ab.uz*.5);
+    sionChair.rotation.set(0,sion.face+.6,Math.PI/2);
+   }
+   C_RESET();
+  }
+  if(!ab.hit&&t>=.58){
    ab.hit=true;thudSfx();
    let ux=pl.x-sion.x,uz=pl.z-sion.z;const L=Math.hypot(ux,uz)||1;
    ab.ux=ux/L;ab.uz=uz/L;ab.bx=pl.x;ab.bz=pl.z;ab.tf=0;
